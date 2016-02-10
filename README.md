@@ -1,27 +1,5 @@
 # Reports
-PowerShell Scripts for NoSpamProxy reports.
+This repository contains PowerShell Scripts to create advanced reports about your NoSpamProxy installation.
 
-get-rejectionreport -<NumberOfDaysToReport> -<SMTPHost> -<ReportSender> -<ReportRecipient> -<ReportSubject>
-Sends a report to the specified E-Mail address which contains the following information:
-  - Total count of rejected emails
-  - Total count of permanently rejected emails
-  - Total count of temporary rejected emails
-  - Total count of rejected emails on envelope level
-  - Total count of rejected emails on body level
-  - Total count of rejected emails, sorted by filters and actions.
-
--NumberOfDaysToReport
-Is not mandatory. Specifies the Number of days to report. Default value is "1".
-
--SMTPHost
-Is mandatory. Specifies the SMTP Host which will be used to send the email.
-
--ReportSender
-Is not mandatory. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
-
--ReportRecipient
-Is mandatory. Specifies the Recipient of the email.
-
--ReportSubject
-Is not mandatory. Specifies the Subject of the email. Default value is "Auswertung".
-
+###[get-rejectionreport](https://github.com/noSpamProxy/Reports/tree/master/Get-RejectionReport)
+This report displays information about all rejected e-mails and which filters were involved.
