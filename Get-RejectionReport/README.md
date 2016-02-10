@@ -1,4 +1,4 @@
-# get-rejectionreport.ps1
+# Get-RejectionReport.ps1
 Sends a report to the specified E-Mail address which contains the following information:
  - Total count of rejected emails
  - Total count of permanently rejected emails
@@ -8,33 +8,31 @@ Sends a report to the specified E-Mail address which contains the following info
  - Total count of rejected emails, sorted by filters and actions.
 
 ###Usage
-`get-rejectionreport -<NumberOfDaysToReport> -<SMTPHost> -<ReportSender> -<ReportRecipient> -<ReportSubject>`
-
-- NumberOfDaysToReport
-```
-Is not mandatory. Specifies the Number of days to report. Default value is "1".
-```
+`Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysToReport] [-ReportSender]`
 
 - SMTPHost
 ```
-Is mandatory. Specifies the SMTP Host which will be used to send the email.
-```
-
-- ReportSender
-```
-Is not mandatory. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
+Mandatory. Specifies the SMTP Host which will be used to send the email.
 ```
 - ReportRecipient
 ```
-Is mandatory. Specifies the Recipient of the email.
+Mandatory. Specifies the Recipient of the email.
 ```
 - ReportSubject
 ```
-Is not mandatory. Specifies the Subject of the email. Default value is "Auswertung".
+Optional. Specifies the Subject of the email. Default value is "Auswertung".
+```
+- NumberOfDaysToReport
+```
+Optional. Specifies the Number of days to report. Default value is "1".
+```
+- ReportSender
+```
+Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
 ```
 
 ###Example
-`.\get-rejectionreport.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
+`.\Get-RejectionReport.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
 
 ###Supported NoSpamProxy Versions
 This Script works for every NoSpamProxy version 10.x and higher.
