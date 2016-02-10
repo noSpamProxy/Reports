@@ -33,5 +33,8 @@ Is mandatory. Specifies the Recipient of the email.
 Is not mandatory. Specifies the Subject of the email. Default value is "Auswertung".
 ```
 
+###Example
+`.\get-rejectionreport.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
+
 ###Supported NoSpamProxy Versions
 This Script works for every NoSpamProxy version 10.x and higher.
