@@ -9,26 +9,29 @@ Sends a report to the specified E-Mail address which contains the following info
 
 ###Usage
 `get-rejectionreport -<NumberOfDaysToReport> -<SMTPHost> -<ReportSender> -<ReportRecipient> -<ReportSubject>`
-  
--NumberOfDaysToReport
 
+- NumberOfDaysToReport
+```
 Is not mandatory. Specifies the Number of days to report. Default value is "1".
+```
 
--SMTPHost
-
+- SMTPHost
+```
 Is mandatory. Specifies the SMTP Host which will be used to send the email.
+```
 
--ReportSender
-
+- ReportSender
+```
 Is not mandatory. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
-
--ReportRecipient
-
+```
+- ReportRecipient
+```
 Is mandatory. Specifies the Recipient of the email.
-
--ReportSubject
-
+```
+- ReportSubject
+```
 Is not mandatory. Specifies the Subject of the email. Default value is "Auswertung".
+```
 
 ###Supported NoSpamProxy Versions
 This Script works for every NoSpamProxy version 10.x and higher.
