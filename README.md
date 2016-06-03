@@ -9,3 +9,6 @@ Sends a report to every E-Mail address that contains all permanently blocked E-M
 
 ###[Send-ReporttoUserswithBlockedEmailsWithAttachment](https://github.com/noSpamProxy/Reports/tree/master/Send-ReporttoUserswithBlockedEmailsWithAttachment)
 Sends a report to every E-Mail address that contains all permanently blocked E-Mails in a specific period of time that have been blocked because of an attachment.
+
+###[Get-DMARCReport](https://github.com/noSpamProxy/Reports/tree/master/get-DMARCReport)
+This report displays information about DMARC Check results for all successful inbound emails.

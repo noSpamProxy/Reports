@@ -1,5 +1,5 @@
 # Get-DMARCReport.ps1
-Sends a report to the specified E-Mail address which contains the following information for every successfull inbound email:
+Sends a report to the specified E-Mail address which contains the following information for every successful inbound email:
  - Domain information from envelope
  - Domain information from Header
  - SPF Check result
