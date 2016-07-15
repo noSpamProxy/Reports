@@ -29,4 +29,4 @@ Optional. Specifies the Subject of the email. Default value is "Auswertung".
 `.\Send-ReporttoUserswithAllBlockedEmails.ps1 -SMTPHost mail.example.com`
 
 ###Supported NoSpamProxy Versions
-This Script works for every NoSpamProxy version 10.x and higher.
+This Script works for every NoSpamProxy version 11.x and higher.
