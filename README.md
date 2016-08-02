@@ -12,3 +12,6 @@ Sends a report to every E-Mail address that contains all permanently blocked E-M
 
 ###[Get-DMARCReport](https://github.com/noSpamProxy/Reports/tree/master/get-DMARCReport)
 This report displays information about DMARC Check results for all successful inbound emails.
+
+###[get-expiredTLSCertificates](https://github.com/noSpamProxy/Reports/tree/master/get-expiredTLSCertificates)
+This report displays all expired certificates from e-mail servers, NoSpamProxy has sent outbound e-mails to.
