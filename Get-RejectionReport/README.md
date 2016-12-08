@@ -1,11 +1,11 @@
 # Get-RejectionReport.ps1
 Sends a report to the specified E-Mail address which contains the following information:
- - Total count of rejected emails
- - Total count of permanently rejected emails
- - Total count of temporary rejected emails
- - Total count of rejected emails on envelope level
- - Total count of rejected emails on body level
- - Total count of rejected emails, sorted by filters and actions.
+ - Total count of processed emails.
+ - Total count of sent emails.
+ - Total count of received emails.
+ - Total count of rejected emails.
+ - Total count of rejected emails for each Filter and Action.
+
 
 ###Usage
 `Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysToReport] [-ReportSender]`
@@ -24,7 +24,7 @@ Optional. Specifies the Subject of the email. Default value is "Auswertung".
 ```
 - NumberOfDaysToReport
 ```
-Optional. Specifies the Number of days to report. Default value is "1".
+Optional. Specifies the Number of days to report. Default value is "7".
 ```
 - ReportSender
 ```
