@@ -1,4 +1,4 @@
-# Get-RejectionReport.ps1
+# Get-RejectionReportNSP12.ps1
 Sends a report to the specified E-Mail address which contains the following information:
  - Total count of processed emails.
  - Total count of sent emails.
@@ -35,4 +35,4 @@ Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Repor
 `.\Get-RejectionReport.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
 
 ###Supported NoSpamProxy Versions
-This Script works for every NoSpamProxy version 11.x. NoSpamProxy version 12.x is NOT supported. For NoSpamProxy 12.x and higher please check https://github.com/noSpamProxy/Reports/tree/master/Get-RejectionReportNSP12
+This Script works for every NoSpamProxy version 12.x and higher.
