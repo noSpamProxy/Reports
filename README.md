@@ -16,6 +16,11 @@ Currently, there are three versions of this script:
 
 Sends a report to every E-Mail address that contains all permanently blocked E-Mails in a specific period of time.
 
+Currently, there are two version of this script:
+
+* [NoSpamProxy 12.x and later](Send-ReporttoUserswithBlockedEmails)
+* [NoSpamProxy 11.x](11.x/Send-ReporttoUserswithBlockedEmails)
+
 ## [Send-ReporttoUserswithBlockedEmailsWithAttachment](https://github.com/noSpamProxy/Reports/tree/master/Send-ReporttoUserswithBlockedEmailsWithAttachment)
 
 Sends a report to every E-Mail address that contains all permanently blocked E-Mails in a specific period of time that have been blocked because of an attachment.
