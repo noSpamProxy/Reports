@@ -19,7 +19,7 @@ Sends a report to every E-Mail address that contains all permanently blocked E-M
 Currently, there are two version of this script:
 
 * [NoSpamProxy 12.x and later](Send-ReporttoUserswithBlockedEmails)
-* [NoSpamProxy 11.x](11.x/Send-ReporttoUserswithBlockedEmails)
+* [NoSpamProxy 11.x](11.x/Send-ReporttoUsersWithBlockedEmails)
 
 ## [Send-ReporttoUserswithBlockedEmailsWithAttachment](https://github.com/noSpamProxy/Reports/tree/master/Send-ReporttoUserswithBlockedEmailsWithAttachment)
 
