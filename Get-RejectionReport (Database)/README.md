@@ -8,7 +8,7 @@ Sends a report to the specified E-Mail address which contains the following info
 - Total count of rejected emails.
 - Total count of rejected emails for each Filter and Action.
 
-This version uses the NoSPamProxy WebServices to acquire the required information. This is suited for small to medium sized installations. For large installations, the [Database Version](../Get-RejectionReport%20(Database)) version instead.
+This version accesses the NoSpamProxy database directly and is much faster than the other version. The drawback is that most NoSpamProxy installations do not allow remote access to the Database so this script needs to be run locally on the Intranet Role.
 
 ## Usage
 
