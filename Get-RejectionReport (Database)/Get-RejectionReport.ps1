@@ -4,7 +4,7 @@ param (
 	[Parameter(Mandatory=$false)][string] $ReportSender = "NoSpamProxy Report Sender <nospamproxy@example.com>",
 	[Parameter(Mandatory=$true)][string] $ReportRecipient,
 	[Parameter(Mandatory=$false)][string] $ReportSubject = "Auswertung",
-	[Parameter(Mandatory=$false)][string] $SqlServer = "(local)",
+	[Parameter(Mandatory=$false)][string] $SqlServer = "(local)\NoSpamProxyDB",
 	[Parameter(Mandatory=$false)][pscredential] $Credential,
 	[Parameter(Mandatory=$false)][string] $Database = "NoSpamProxyAddressSynchronization"
 )

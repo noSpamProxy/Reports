@@ -1,4 +1,4 @@
-# Get-RejectionReportNSP12.ps1
+# Get-RejectionReport.ps1
 
 Sends a report to the specified E-Mail address which contains the following information:
 
