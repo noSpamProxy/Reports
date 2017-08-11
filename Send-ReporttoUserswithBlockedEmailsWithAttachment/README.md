@@ -26,4 +26,4 @@ Send-ReporttoUserswithBlockedEmailsWithAttachment -SMTPHost [-NumberOfDaysToRepo
 
 ## Supported NoSpamProxy Versions
 
-This Script works for every NoSpamProxy version 11.x. It will currently not work with NoSpamProxy 12 or later.
+This Script works for NoSpamProxy 12.x or later. 
