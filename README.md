@@ -12,7 +12,7 @@ Currently, there are three versions of this script:
 * [NoSpamProxy 12.x and later, access via WebServices](Get-RejectionReport%20(WebServices))
 * [NoSpamProxy 11.x](11.x/Get-RejectionReport)
 
-## [Send-ReporttoUserswithAllBlockedEmails](https://github.com/noSpamProxy/Reports/tree/master/Send-ReporttoUserswithAllBlockedEmails)
+## Send-ReporttoUserswithAllBlockedEmails
 
 Sends a report to every E-Mail address that contains all permanently blocked E-Mails in a specific period of time.
 
@@ -21,9 +21,13 @@ Currently, there are two version of this script:
 * [NoSpamProxy 12.x and later](Send-ReporttoUserswithBlockedEmails)
 * [NoSpamProxy 11.x](11.x/Send-ReporttoUsersWithBlockedEmails)
 
-## [Send-ReporttoUserswithBlockedEmailsWithAttachment](https://github.com/noSpamProxy/Reports/tree/master/Send-ReporttoUserswithBlockedEmailsWithAttachment)
+## Send-ReporttoUserswithBlockedEmailsWithAttachment
 
 Sends a report to every E-Mail address that contains all permanently blocked E-Mails in a specific period of time that have been blocked because of an attachment.
+
+* [NoSpamProxy 12.x and later](Send-ReporttoUserswithBlockedEmailsWithAttachment)
+* [NoSpamProxy 11.x](11.x/Send-ReporttoUserswithBlockedEmailsWithAttachment)
+
 
 ## [Get-DmarcReport](https://github.com/noSpamProxy/Reports/tree/master/get-DMARCReport)
 
