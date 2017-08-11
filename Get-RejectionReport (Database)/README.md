@@ -12,6 +12,8 @@ This version accesses the NoSpamProxy database directly and is much faster than 
 
 ## Usage
 
+Download the whole folder (including the SQL scripts) and then run the following command:
+
 ```ps
 Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysToReport] [-ReportSender]`
 ```

@@ -8,7 +8,7 @@ param (
 	[Parameter(Mandatory=$false)][pscredential] $Credential,
 	[Parameter(Mandatory=$false)][string] $Database = "NoSpamProxyAddressSynchronization"
 )
-$reportFileName = [Path]::Combine($Env:TEMP, "reject-analysis.html")
+$reportFileName = [System.IO.Path]::Combine($Env:TEMP, "reject-analysis.html")
 $totalRejected = 0
 $tempRejected = 0
 $permanentRejected = 0
@@ -29,7 +29,8 @@ $dateFrom = $dateStart.ToString("dd.MM.yyyy")
 function New-DatabaseConnection() {
 	$connectionString = "Server=$SqlServer;Database=$Database;"
 	if ($Credential) {
-		$connectionString += "uid=" + $Credential.UserName + ";pwd=" + $Credential.Password + ";"
+		$networkCredential = $Credential.GetNetworkCredential
+		$connectionString += "uid=" + $networkCredential.UserName + ";pwd=" + $networkCredential.Password + ";"
 	}
 	else {
 		$connectionString +="Integrated Security=True";
