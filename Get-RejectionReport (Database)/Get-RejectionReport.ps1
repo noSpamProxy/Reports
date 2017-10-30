@@ -30,7 +30,7 @@ $dateFrom = $dateStart.ToString("dd.MM.yyyy")
 function New-DatabaseConnection() {
 	$connectionString = "Server=$SqlServer;Database=$Database;"
 	if ($Credential) {
-		$networkCredential = $Credential.GetNetworkCredential
+		$networkCredential = $Credential.GetNetworkCredential()
 		$connectionString += "uid=" + $networkCredential.UserName + ";pwd=" + $networkCredential.Password + ";"
 	}
 	else {
@@ -49,8 +49,8 @@ function Coalesce-Zero($a) {
 }
 
 function Invoke-SqlQuery([string] $queryName, [bool] $isInlineQuery = $false, [bool] $isSingleResult) {
-	$connection = New-DatabaseConnection
 	try {
+		$connection = New-DatabaseConnection
 		$command = $connection.CreateCommand()
 		if ($isInlineQuery) {
 			$command.CommandText = $queryName;
