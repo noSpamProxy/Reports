@@ -108,8 +108,8 @@ $cyrenIPRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "cyrenIp
 $characterSetRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "characterSetFilter" } | Select-Object -ExpandProperty Count -First 1)
 $wordRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "wordFilter" } | Select-Object -ExpandProperty Count -First 1)
 $rdnsPermanentRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "reputation" } | Select-Object -ExpandProperty Count -First 1)
-$cyrenAVRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count -First 1)
-$contentrejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count -First 1)
+$cyrenAVRejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count).Sum)
+$contentrejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count).Sum)
 $decryptPolicyRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "validateSignatureAndDecrypt" } | Select-Object -ExpandProperty Count -First 1)
 
 "Retrieving number of mails with invalid recipients"
@@ -187,8 +187,8 @@ Write-Host "Done."
 # SIG # Begin signature block
 # MIIMSwYJKoZIhvcNAQcCoIIMPDCCDDgCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUiIogCiKm/LaOvXok+6dM4fX0
-# EgKgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU7NTID5fgyrBqMw+2YDDZjB7I
+# 8rSgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -244,11 +244,11 @@ Write-Host "Done."
 # EydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2IC0gRzMCDFH6/Cfo
 # wsq+AMu2DTAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZ
 # BgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYB
-# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUtianlPT+Vr0BdjQAkkxExC6OrvYwDQYJ
-# KoZIhvcNAQEBBQAEggEAjOEwsYxt3qbERXd+D/tRAkW57Oq5sDcO2HyfPEHHTdVU
-# T2RUbw3j+JsCbat/Y8/zMneMBwh59n7yMYXf90x0h9mt/Pstgyse4OSWgU36cul5
-# v74sH1lDdJk0GF5CxrH2OUqUwf+4DX7fok5UWePRVMCTxWcrvbBu7/jLOzHOmIm0
-# Ul1XpOnT8rmLJKvNZNjw5e8eColdQ7BHX1CHl1QBLU4smigihHEIOjFFYw1O4/EE
-# Kpep0N/wUbWxoeM+5xcr/lEs7OsZo0ml/6ytFDvljn9OJ7tXmkk1b7dUjT2Oj2kg
-# eTnoz8YA1/gBEPFkyH5OjBjCdwWwEIz2as8e6emd9w==
+# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUwGTG39Ja8577knGVduZIBCiK8GAwDQYJ
+# KoZIhvcNAQEBBQAEggEAF0fSWmb81itXfb/Vhh5Etb9D69FaHpCfiAob8OFiS38L
+# EiZGO98mELtIR5ssrpagDlcwvQtGBqodWWPQpQ28p6EDrlFdHMOyDr0bmlHOC5Lj
+# dBSRwV8eecdVJATreId9Fv2zFm6U1lPt8U2jg0V8A2KNvIylAij6szQZJzs5bqW5
+# 2YAbTIcT0/Xn4nuSQZa6hbMkmcdfRPaOdBLIS2Z1ZFFGoQUeTNq3xmBCllmQsgy5
+# K/NPcz5MVFObVo8RJuXG7RelToi53/ksoIK1+L9vd0UlCMM5hmipgjRofbuBgsYb
+# TpO767dDZkun/L20kJ3ujkO0bJ8IxAWD/lakjQlzzg==
 # SIG # End signature block
