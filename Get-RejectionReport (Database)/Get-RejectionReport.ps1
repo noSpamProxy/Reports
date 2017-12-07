@@ -121,19 +121,41 @@ else{
 }
 
 $mailsprocessed = $totalMails
-$blockedpercentage = [Math]::Round($SpamRejected/$inboundmessages*100,2)
-$MailsToInvalidRecipientsPercentage = [Math]::Round($MailsToInvalidRecipients/$inboundmessages*100,2)
-$cyrenspamblockpercentage = [Math]::Round($cyrenSpamRejected/$SpamRejected*100,2)
-$cyrenavblockpercentage = [Math]::Round($cyrenAVRejected/$SpamRejected*100,2)
-$cyrenIPBlockpercentage = [Math]::Round($cyrenIPRejected/$SpamRejected*100,2)
-$surblblockedpercentage = [Math]::Round($surblRejected/$SpamRejected*100,2)
-$charactersetblockedpercentage = [Math]::Round($characterSetRejected/$SpamRejected*100,2)
-$wordrejectedblockedpercentage = [Math]::Round($wordRejected/$SpamRejected*100,2)
-$decryptpolicyblockedpercentage = [Math]::Round($decryptPolicyRejected/$SpamRejected*100,2)
-$rblRejectedpercentage = [Math]::Round($rblRejected/$SpamRejected*100,2)
-$reputationFilterRejectedpercentage = [Math]::Round($rdnsPermanentRejected/$SpamRejected*100,2)
-$contentrejectedpercentage = [Math]::Round($contentRejected/$SpamRejected*100,2)
-$greylistrejectedpercentage = [Math]::Round($greylistRejected/$SpamRejected*100,2)
+
+if ($inboundmessages -eq 0) {
+    $blockedpercentage = 0
+    $MailsToInvalidRecipientsPercentage = 0
+} else {
+    $blockedpercentage = [Math]::Round($SpamRejected/$inboundmessages*100,2)
+    $MailsToInvalidRecipientsPercentage = [Math]::Round($MailsToInvalidRecipients/$inboundmessages*100,2)
+}
+
+if ($SpamRejected -eq 0) {
+    $cyrenspamblockpercentage = 0
+    $cyrenavblockpercentage = 0
+    $cyrenIPBlockpercentage = 0
+    $surblblockedpercentage = 0
+    $charactersetblockedpercentage = 0
+    $wordrejectedblockedpercentage = 0
+    $decryptpolicyblockedpercentage = 0
+    $rblRejectedpercentage = 0
+    $reputationFilterRejectedpercentage = 0
+    $contentrejectedpercentage = 0
+    $greylistrejectedpercentage = 0
+} else {
+    $cyrenspamblockpercentage = [Math]::Round($cyrenSpamRejected/$SpamRejected*100,2)
+    $cyrenavblockpercentage = [Math]::Round($cyrenAVRejected/$SpamRejected*100,2)
+    $cyrenIPBlockpercentage = [Math]::Round($cyrenIPRejected/$SpamRejected*100,2)
+    $surblblockedpercentage = [Math]::Round($surblRejected/$SpamRejected*100,2)
+    $charactersetblockedpercentage = [Math]::Round($characterSetRejected/$SpamRejected*100,2)
+    $wordrejectedblockedpercentage = [Math]::Round($wordRejected/$SpamRejected*100,2)
+    $decryptpolicyblockedpercentage = [Math]::Round($decryptPolicyRejected/$SpamRejected*100,2)
+    $rblRejectedpercentage = [Math]::Round($rblRejected/$SpamRejected*100,2)
+    $reputationFilterRejectedpercentage = [Math]::Round($rdnsPermanentRejected/$SpamRejected*100,2)
+    $contentrejectedpercentage = [Math]::Round($contentRejected/$SpamRejected*100,2)
+    $greylistrejectedpercentage = [Math]::Round($greylistRejected/$SpamRejected*100,2)
+}
+
 Write-Host " "
 Write-Host "TemporaryReject Total:" $tempRejected
 Write-Host "PermanentReject Total:" $permanentRejected
@@ -187,8 +209,8 @@ Write-Host "Done."
 # SIG # Begin signature block
 # MIIMSwYJKoZIhvcNAQcCoIIMPDCCDDgCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU7NTID5fgyrBqMw+2YDDZjB7I
-# 8rSgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUStcasmYiBeFAdZZxbm2XQycV
+# 2+mgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -244,11 +266,11 @@ Write-Host "Done."
 # EydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2IC0gRzMCDFH6/Cfo
 # wsq+AMu2DTAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZ
 # BgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYB
-# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUwGTG39Ja8577knGVduZIBCiK8GAwDQYJ
-# KoZIhvcNAQEBBQAEggEAF0fSWmb81itXfb/Vhh5Etb9D69FaHpCfiAob8OFiS38L
-# EiZGO98mELtIR5ssrpagDlcwvQtGBqodWWPQpQ28p6EDrlFdHMOyDr0bmlHOC5Lj
-# dBSRwV8eecdVJATreId9Fv2zFm6U1lPt8U2jg0V8A2KNvIylAij6szQZJzs5bqW5
-# 2YAbTIcT0/Xn4nuSQZa6hbMkmcdfRPaOdBLIS2Z1ZFFGoQUeTNq3xmBCllmQsgy5
-# K/NPcz5MVFObVo8RJuXG7RelToi53/ksoIK1+L9vd0UlCMM5hmipgjRofbuBgsYb
-# TpO767dDZkun/L20kJ3ujkO0bJ8IxAWD/lakjQlzzg==
+# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUZBu1YCw/myrv/sTfV1QtDfFAxo8wDQYJ
+# KoZIhvcNAQEBBQAEggEAewUIZNhFmDVRwgE5IoTCjMZZWJ7zJMPrnyJxCVPdInDC
+# NgTsTa38RqaGQTK+HeEHB5Fe90X7++Hn8rKXgFn/eHXeE2qI+1RpbtHKf5CQAoLe
+# qsHtlp2LMLvMp5ulTyOW0bb+8OuhlVsZaACAeVZo+OUbX6jLhG3Wq+Wr5iRzwHIP
+# 4h4DO3gjXh9SpRrFztVNDlAmeNn7agb/SZmMZpKsZllkeD51tmlB6HgoL5VRhZP0
+# lOqLKk+WC+FmaqimtBnkixEWkKYdA1/pehIDMjvbHYpYMqWrmM9xaHV8UP8vKikF
+# 1cwa1rl1ULIkl4+NbqrTCpUXeV4MqdS6ENrbiGfdlA==
 # SIG # End signature block
