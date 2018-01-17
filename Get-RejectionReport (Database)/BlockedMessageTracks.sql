@@ -11,9 +11,11 @@ select
 		when Status = 1 then 'Success' 
 		when Status = 3 then 'Temporary Blocked'
 		when Status = 4 then 'Permanently Blocked'
+		when Status = 6 then 'PartialSuccess'
+		when Status = 9 then 'Put on Hold'
 		when Status is null then 'Summary'
 	end Status, 
 	COUNT(*)  Count
-from MessageTracking.MessageTrackEntry
-where Sent > @startdate and Sent < @enddate and (status = 1 or status = 3 or status = 4)
+from MessageTracking.MessageTrackEntry 
+where Sent > @startdate and Sent < @enddate and (status = 1 or status = 3 or status = 4 or Status = 6 or status = 9)
 group by rollup (WasReceivedFromRelayServer, status)

@@ -7,6 +7,7 @@ Sends a report to the specified E-Mail address which contains the following info
 - Total count of received emails.
 - Total count of rejected emails.
 - Total count of rejected emails for each Filter and Action.
+- Total count of mails to unknown 
 
 This version accesses the NoSpamProxy database directly and is much faster than the other version. The drawback is that most NoSpamProxy installations do not allow remote access to the Database so this script needs to be run locally on the Intranet Role.
 
@@ -26,6 +27,7 @@ Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysTo
 - **SqlServer**: Optional. The name of the Database server (including instance name, if any). Defaults to (local)\NoSpamProxyDB.
 - **Database**: Optional. Name the Database to query. Defaults to "NoSpamProxyAddressSynchronization".
 - **Credential**: Optional. Username and password for the SQL authentication on the database server. If not set, Integrated authentication is used, which is the default.
+- **TreatUnknownAsSpam**: Optional. When true, mails to unknown recipients are treatet as spam mails. Defaults to `$true`.
 
 
 ## Example

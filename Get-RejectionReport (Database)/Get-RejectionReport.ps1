@@ -6,7 +6,8 @@ param (
 	[Parameter(Mandatory=$false)][string] $ReportSubject = "Auswertung",
 	[Parameter(Mandatory=$false)][string] $SqlServer = "(local)\NoSpamProxyDB",
 	[Parameter(Mandatory=$false)][pscredential] $Credential,
-	[Parameter(Mandatory=$false)][string] $Database = "NoSpamProxyAddressSynchronization"
+	[Parameter(Mandatory=$false)][string] $Database = "NoSpamProxyAddressSynchronization",
+	[Parameter(Mandatory=$false)][bool] $TreatUnkownAsSpam = $true
 )
 $reportFileName = [System.IO.Path]::Combine($Env:TEMP, "reject-analysis.html")
 $totalRejected = 0
@@ -29,7 +30,7 @@ $dateFrom = $dateStart.ToString("dd.MM.yyyy")
 function New-DatabaseConnection() {
 	$connectionString = "Server=$SqlServer;Database=$Database;"
 	if ($Credential) {
-		$networkCredential = $Credential.GetNetworkCredential
+		$networkCredential = $Credential.GetNetworkCredential()
 		$connectionString += "uid=" + $networkCredential.UserName + ";pwd=" + $networkCredential.Password + ";"
 	}
 	else {
@@ -47,21 +48,42 @@ function Coalesce-Zero($a) {
 	if ($a) { $a } else { 0 } 
 }
 
-function Invoke-SqlQuery([string] $queryName) {
-	$connection = New-DatabaseConnection
+function Invoke-SqlQuery([string] $queryName, [bool] $isInlineQuery = $false, [bool] $isSingleResult) {
 	try {
+		$connection = New-DatabaseConnection
 		$command = $connection.CreateCommand()
-		$command.CommandText = (Get-Content "$queryName.sql") -f $dateFrom, $dateTo
-		$result = $command.ExecuteReader()
-		$table = new-object "System.Data.DataTable"
-		$table.Load($result)
-		return $table
+		if ($isInlineQuery) {
+			$command.CommandText = $queryName;
+		}
+		else {
+			$command.CommandText = (Get-Content "$queryName.sql") -f $dateFrom, $dateTo	
+		}
+		if ($isSingleResult) {
+			return $command.ExecuteScalar();
+		}
+		else {
+			$result = $command.ExecuteReader()
+			$table = new-object "System.Data.DataTable"
+			$table.Load($result)
+			return $table
+		}
 	}
 	finally {
 		$connection.Close();
 	}
 
 }
+
+"Getting List of mails to unknown recipients..."
+$databaseVersion = [Version] (Invoke-SqlQuery "SELECT value FROM sys.fn_listextendedproperty ('AddressSynchronizationDBVersion', null, null, null, null, null, default)" -isInlineQuery $true -isSingleResult $true)
+
+if ($databaseVersion -gt ([Version] "11.2.22")) {
+	$MailsToInvalidRecipients = Invoke-SqlQuery "UnknownRecipients_Current" -isSingleResult $true
+}
+else {
+	$MailsToInvalidRecipients = Invoke-SqlQuery "UnknownRecipients_Old" -isSingleResult $true
+}
+
 
 "Getting MessageTracks..."
 $blockedMessageStatistics = Invoke-SqlQuery "BlockedMessageTracks"
@@ -82,30 +104,63 @@ $outboundmessages = $blockedMessageStatistics | Where-Object {$_.Direction -eq "
 $rblRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "realtimeBlocklist" } | Select-Object -ExpandProperty Count -First 1)
 $surblRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "surblFilter" } | Select-Object -ExpandProperty Count -First 1)
 $cyrenSpamRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "cyrenFilter" } | Select-Object -ExpandProperty Count -First 1)
+$cyrenIPRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "cyrenIpReputationFilter" } | Select-Object -ExpandProperty Count -First 1)
 $characterSetRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "characterSetFilter" } | Select-Object -ExpandProperty Count -First 1)
 $wordRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "wordFilter" } | Select-Object -ExpandProperty Count -First 1)
 $rdnsPermanentRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "reputation" } | Select-Object -ExpandProperty Count -First 1)
-$cyrenAVRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count -First 1)
-$contentrejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count -First 1)
+$cyrenAVRejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count).Sum)
+$contentrejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count).Sum)
 $decryptPolicyRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "validateSignatureAndDecrypt" } | Select-Object -ExpandProperty Count -First 1)
 
+"Retrieving number of mails with invalid recipients"
+if ($TreatUnkownAsSpam) {
+	$SpamRejected = $totalRejected - $MailsToInvalidRecipients
+}
+else{
+	$SpamRejected = $totalRejected
+}
 
-$mailsprocessed = $outboundmessages+$inboundmessages
-$blockedpercentage = [Math]::Round($totalRejected/$inboundmessages*100,2)
-$cyrenspamblockpercentage = [Math]::Round($cyrenSpamRejected/$totalRejected*100,2)
-$cyrenavblockpercentage = [Math]::Round($cyrenAVRejected/$totalRejected*100,2)
-$surblblockedpercentage = [Math]::Round($surblRejected/$totalRejected*100,2)
-$charactersetblockedpercentage = [Math]::Round($characterSetRejected/$totalRejected*100,2)
-$wordrejectedblockedpercentage = [Math]::Round($wordRejected/$totalRejected*100,2)
-$decryptpolicyblockedpercentage = [Math]::Round($decryptPolicyRejected/$totalRejected*100,2)
-$rblRejectedpercentage = [Math]::Round($rblRejected/$totalRejected*100,2)
-$reputationFilterRejectedpercentage = [Math]::Round($rdnsPermanentRejected/$totalRejected*100,2)
-$contentrejectedpercentage = [Math]::Round($contentRejected/$totalRejected*100,2)
-$greylistrejectedpercentage = [Math]::Round($greylistRejected/$totalRejected*100,2)
+$mailsprocessed = $totalMails
+
+if ($inboundmessages -eq 0) {
+    $blockedpercentage = 0
+    $MailsToInvalidRecipientsPercentage = 0
+} else {
+    $blockedpercentage = [Math]::Round($SpamRejected/$inboundmessages*100,2)
+    $MailsToInvalidRecipientsPercentage = [Math]::Round($MailsToInvalidRecipients/$inboundmessages*100,2)
+}
+
+if ($SpamRejected -eq 0) {
+    $cyrenspamblockpercentage = 0
+    $cyrenavblockpercentage = 0
+    $cyrenIPBlockpercentage = 0
+    $surblblockedpercentage = 0
+    $charactersetblockedpercentage = 0
+    $wordrejectedblockedpercentage = 0
+    $decryptpolicyblockedpercentage = 0
+    $rblRejectedpercentage = 0
+    $reputationFilterRejectedpercentage = 0
+    $contentrejectedpercentage = 0
+    $greylistrejectedpercentage = 0
+} else {
+    $cyrenspamblockpercentage = [Math]::Round($cyrenSpamRejected/$SpamRejected*100,2)
+    $cyrenavblockpercentage = [Math]::Round($cyrenAVRejected/$SpamRejected*100,2)
+    $cyrenIPBlockpercentage = [Math]::Round($cyrenIPRejected/$SpamRejected*100,2)
+    $surblblockedpercentage = [Math]::Round($surblRejected/$SpamRejected*100,2)
+    $charactersetblockedpercentage = [Math]::Round($characterSetRejected/$SpamRejected*100,2)
+    $wordrejectedblockedpercentage = [Math]::Round($wordRejected/$SpamRejected*100,2)
+    $decryptpolicyblockedpercentage = [Math]::Round($decryptPolicyRejected/$SpamRejected*100,2)
+    $rblRejectedpercentage = [Math]::Round($rblRejected/$SpamRejected*100,2)
+    $reputationFilterRejectedpercentage = [Math]::Round($rdnsPermanentRejected/$SpamRejected*100,2)
+    $contentrejectedpercentage = [Math]::Round($contentRejected/$SpamRejected*100,2)
+    $greylistrejectedpercentage = [Math]::Round($greylistRejected/$SpamRejected*100,2)
+}
+
 Write-Host " "
 Write-Host "TemporaryReject Total:" $tempRejected
 Write-Host "PermanentReject Total:" $permanentRejected
 Write-Host "TotalReject:" $totalRejected
+Write-Host "Unknown recipients": $MailsToInvalidRecipients
 Write-Host " "
 Write-Host "Sending E-Mail to " $ReportRecipient "..."
 
@@ -126,9 +181,11 @@ $htmlout = "<html>
 			<tr><td>Mails Processed</td><td>" + $mailsprocessed +"</td><td>&nbsp;</td></tr>
 			<tr><td>Sent</td><td>" + $outboundmessages +"</td><td>&nbsp;</td></tr>
 			<tr><td>Received</td><td>" + $inboundmessages +"</td><td>&nbsp;</td></tr>
-			<tr><td>Mails blocked</td><td>" + $totalRejected +"</td><td>" + $blockedpercentage +" %</td></tr>
+			<tr><td>Mails to invalid recipients</td><td>" + $MailsToInvalidRecipients +"</td><td>" + $MailsToInvalidRecipientsPercentage + " %</td></tr>
+			<tr><td>Mails blocked due to Spam, Virus or Policy violation</td><td>" + $SpamRejected +"</td><td>" + $blockedpercentage +" %</td></tr>
 			<tr><td>Realtime Blocklist Check</td><td>" + $rblRejected +"</td><td>" + $rblRejectedpercentage +" %</td></tr>
 			<tr><td>Reputation Check</td><td>" + $rdnsPermanentRejected +"</td><td>" + $reputationFilterRejectedpercentage +" %</td></tr>
+			<tr><td>Cyren IP Reputation</td><td>" + $cyrenIPRejected +"</td><td>" + $cyrenIPBlockpercentage +" %</td></tr>
 			<tr><td>Cyren AntiSpam</td><td>" + $cyrenSpamRejected +"</td><td>" + $cyrenspamblockpercentage +" %</td></tr>
 			<tr><td>Cyren Premium AntiVirus</td><td>" + $cyrenAVRejected +"</td><td>" + $cyrenavblockpercentage +" %</td></tr>
 			<tr><td>Spam URI Realtime Blocklists</td><td>" + $surblRejected +"</td><td>" + $surblblockedpercentage +" %</td></tr>
@@ -149,12 +206,11 @@ Write-Host "Doing some cleanup.."
 Remove-Item $reportFileName
 Write-Host "Done."
 
-
 # SIG # Begin signature block
 # MIIMSwYJKoZIhvcNAQcCoIIMPDCCDDgCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUGtVwymOkrByQbwRm6tjXdXVF
-# qdugggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUStcasmYiBeFAdZZxbm2XQycV
+# 2+mgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -210,11 +266,11 @@ Write-Host "Done."
 # EydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2IC0gRzMCDFH6/Cfo
 # wsq+AMu2DTAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZ
 # BgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYB
-# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUEGAkkhJoyyO8dbaE7iU8nyIVuUUwDQYJ
-# KoZIhvcNAQEBBQAEggEALiSapooVH/uHWUAe04BCCUjIZS+fUfrYBcuORRPbvXMv
-# QSk/sXHNzows6onkho+d5OHv8kOiV8eL7LyXH5OCGhpxAxEC+RdRAjCmEQ1EyO7l
-# ipTuRHNa62ukJAGE49whEx6i0LiDUhRKvqtE1C18wsWlke7DfxK0jhNUioXbl4HB
-# MUV1KzOo/lEkFpfdefgKZRQL7PSH61QkK2D19b8l5gpnz7UO384YXBX+o0qDkzA3
-# B9BulQa8cJsPM+fUR13eAb/S9lPQ9Eq7ixR3LWrHjM/wxiG3v/P07V32enlpBeqS
-# kQkN17n/XhDFWWT+SCcKwEvKD5CF0TC0TRupoRipzg==
+# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUZBu1YCw/myrv/sTfV1QtDfFAxo8wDQYJ
+# KoZIhvcNAQEBBQAEggEAewUIZNhFmDVRwgE5IoTCjMZZWJ7zJMPrnyJxCVPdInDC
+# NgTsTa38RqaGQTK+HeEHB5Fe90X7++Hn8rKXgFn/eHXeE2qI+1RpbtHKf5CQAoLe
+# qsHtlp2LMLvMp5ulTyOW0bb+8OuhlVsZaACAeVZo+OUbX6jLhG3Wq+Wr5iRzwHIP
+# 4h4DO3gjXh9SpRrFztVNDlAmeNn7agb/SZmMZpKsZllkeD51tmlB6HgoL5VRhZP0
+# lOqLKk+WC+FmaqimtBnkixEWkKYdA1/pehIDMjvbHYpYMqWrmM9xaHV8UP8vKikF
+# 1cwa1rl1ULIkl4+NbqrTCpUXeV4MqdS6ENrbiGfdlA==
 # SIG # End signature block
