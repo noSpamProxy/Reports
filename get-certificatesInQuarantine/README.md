@@ -5,7 +5,7 @@ Sends a report to the specified E-Mail address which contains a list of certific
  - ValidTo
 
 
-###Usage
+### Usage
 `get-certificatesInQuarantine.ps1 -SMTPHost -ReportRecipient [-ReportSubject] [-ReportSender]`
 
 - SMTPHost
@@ -25,8 +25,8 @@ Optional. Specifies the Subject of the email. Default value is "DMARC Auswertung
 Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
 ```
 
-###Example
+### Example
 `.\get-certificatesInQuarantine.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
 
-###Supported NoSpamProxy Versions
+### Supported NoSpamProxy Versions
 This Script works for every NoSpamProxy version 12.1 and higher.
