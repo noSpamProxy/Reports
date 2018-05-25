@@ -35,8 +35,8 @@ This report displays information about DMARC Check results for all successful in
 
 Currently, there are two versions of this script:
 
-* [NoSpamProxy 12.2 and later](get-DmarcReport)
-* [NoSpamProxy 11.x](11.x/get-DmarcReport)
+* [NoSpamProxy 12.2 and later](Get-DMARCReport)
+* [NoSpamProxy 11.x](11.x/Get-DMARCReport)
 
 ## [Get-ExpiredTLSCertificates](https://github.com/noSpamProxy/Reports/tree/master/get-expiredTLSCertificates)
 
