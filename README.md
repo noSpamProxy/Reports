@@ -36,3 +36,7 @@ This report displays information about DMARC Check results for all successful in
 ## [Get-ExpiredTLSCertificates](https://github.com/noSpamProxy/Reports/tree/master/get-expiredTLSCertificates)
 
 This report displays all expired certificates from e-mail servers that NoSpamProxy has sent outbound e-mails to.
+
+## [get-certificatesInQuarantine](https://github.com/noSpamProxy/Reports/tree/master/get-certificatesInQuarantine)
+
+This report displays a list of certificates in the certificate quarantine.
