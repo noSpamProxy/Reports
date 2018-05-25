@@ -33,6 +33,11 @@ Sends a report to every E-Mail address that contains all permanently blocked E-M
 
 This report displays information about DMARC Check results for all successful inbound emails.
 
+Currently, there are two versions of this script:
+
+* [NoSpamProxy 12.x and later](Get-DmarcReport)
+* [NoSpamProxy 11.x](11.x/Get-DmarcReport)
+
 ## [Get-ExpiredTLSCertificates](https://github.com/noSpamProxy/Reports/tree/master/get-expiredTLSCertificates)
 
 This report displays all expired certificates from e-mail servers that NoSpamProxy has sent outbound e-mails to.

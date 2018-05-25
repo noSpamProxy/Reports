@@ -41,4 +41,4 @@ Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Repor
 `.\Get-RejectionReport.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
 
 ###Supported NoSpamProxy Versions
-This Script works for every NoSpamProxy version 12.2 and higher.
+This Script works for every NoSpamProxy version 11.0 and higher.
