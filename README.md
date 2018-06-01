@@ -29,7 +29,7 @@ Sends a report to every E-Mail address that contains all permanently blocked E-M
 * [NoSpamProxy 11.x](11.x/Send-ReporttoUserswithBlockedEmailsWithAttachment)
 
 
-## [Get-DmarcReport](https://github.com/noSpamProxy/Reports/tree/master/get-DMARCReport)
+## [Get-DmarcReport](https://github.com/noSpamProxy/Reports/tree/master/Get-DMARCReport)
 
 This report displays information about DMARC Check results for all successful inbound emails.
 
