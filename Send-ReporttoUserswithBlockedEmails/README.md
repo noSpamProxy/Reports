@@ -26,4 +26,4 @@ Send-ReporttoUserswithAllBlockedEmails -SMTPHost [-NumberOfDaysToReport] [-Repor
 
 ## Supported NoSpamProxy Versions
 
-This Script works with NoSpamProxy 12.x and higher.
+This Script works with NoSpamProxy 12.2 and higher.
