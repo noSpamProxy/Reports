@@ -30,4 +30,4 @@ Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysTo
 
 ## Supported NoSpamProxy Versions
 
-This Script works for NoSpamProxy version 12.x and higher.
+This Script works for NoSpamProxy version 12.2 and higher.
