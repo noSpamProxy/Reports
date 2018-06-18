@@ -33,4 +33,4 @@ Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Repor
 `.\get-expiredTLSCertificates.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
 
 ###Supported NoSpamProxy Versions
-This Script works for every NoSpamProxy version 11.x and higher.
+This Script works for every NoSpamProxy version 11.x and 12.0.
