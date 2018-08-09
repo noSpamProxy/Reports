@@ -1,5 +1,5 @@
 # get-certificatesInQuarantine.ps1
-Sends a report to the specified E-Mail address which contains a list of certificates in the certificate quarantine. The report contains the following information:
+Sends a report to the specified E-Mail address which contains a list of certificates in the certificate quarantine. If no certificates are in the quarantine, no report is sent. The report contains the following information:
  - SubjectDistinguishedName
  - IssuerDistinguishedName
  - ValidTo
