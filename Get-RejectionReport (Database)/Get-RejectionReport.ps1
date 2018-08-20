@@ -24,8 +24,8 @@ $greylistrejected = 0
 $rdnsPermanentRejected = 0
 $decryptPolicyRejected = 0
 $dateStart = (Get-Date).AddDays(-$NumberOfDaysToReport)
-$dateTo = Get-Date -format "dd.MM.yyyy"
-$dateFrom = $dateStart.ToString("dd.MM.yyyy")
+$dateTo = Get-Date -format "dd.MM.yyyy HH:mm:ss"
+$dateFrom = $dateStart.ToString("dd.MM.yyyy HH:mm:ss")
 
 function New-DatabaseConnection() {
 	$connectionString = "Server=$SqlServer;Database=$Database;"
