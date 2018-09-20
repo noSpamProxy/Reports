@@ -28,6 +28,8 @@ Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysTo
 - **Database**: Optional. Name the Database to query. Defaults to "NoSpamProxyAddressSynchronization".
 - **Credential**: Optional. Username and password for the SQL authentication on the database server. If not set, Integrated authentication is used, which is the default.
 - **TreatUnknownAsSpam**: Optional. When true, mails to unknown recipients are treatet as spam mails. Defaults to `$true`.
+- **TopAddressesCount**: Optional. How many Addresses to include in the top Senders/Recipients/Spammers. Defaults to 10
+- **ExcludeFromTopAddresses**: Optional. Specify addresses to ignore when evaluating top Senders/Recipients. Useful for dropping obvious addresses from the list to get a more informative statistic
 
 
 ## Example
