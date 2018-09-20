@@ -14,7 +14,7 @@ select
 		when Status = 6 then 'PartialSuccess'
 		when Status = 9 then 'Put on Hold'
 		when Status is null then 'Summary'
-	end Status, 
+	end Status,
 	COUNT(*)  Count
 from MessageTracking.MessageTrackEntry 
 where Sent > @startdate and Sent < @enddate and (status = 1 or status = 3 or status = 4 or Status = 6 or status = 9)

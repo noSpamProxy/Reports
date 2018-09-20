@@ -7,7 +7,9 @@ param (
 	[Parameter(Mandatory=$false)][string] $SqlServer = "(local)\NoSpamProxyDB",
 	[Parameter(Mandatory=$false)][pscredential] $Credential,
 	[Parameter(Mandatory=$false)][string] $Database = "NoSpamProxyAddressSynchronization",
-	[Parameter(Mandatory=$false)][bool] $TreatUnkownAsSpam = $true
+	[Parameter(Mandatory=$false)][bool] $TreatUnkownAsSpam = $true,
+    [Parameter(Mandatory=$false)][int] $TopAddressesCount = 10,
+    [Parameter(Mandatory=$false)][string[]] $ExcludeFromTopAddresses = @()
 )
 $reportFileName = [System.IO.Path]::Combine($Env:TEMP, "reject-analysis.html")
 $totalRejected = 0
@@ -24,8 +26,8 @@ $greylistrejected = 0
 $rdnsPermanentRejected = 0
 $decryptPolicyRejected = 0
 $dateStart = (Get-Date).AddDays(-$NumberOfDaysToReport)
-$dateTo = Get-Date -format "dd.MM.yyyy"
-$dateFrom = $dateStart.ToString("dd.MM.yyyy")
+$dateTo = Get-Date -format "dd.MM.yyyy HH:mm:ss"
+$dateFrom = $dateStart.ToString("dd.MM.yyyy HH:mm:ss")
 
 function New-DatabaseConnection() {
 	$connectionString = "Server=$SqlServer;Database=$Database;"
@@ -91,6 +93,9 @@ $blockedMessageStatistics = Invoke-SqlQuery "BlockedMessageTracks"
 $actions = Invoke-SqlQuery "Actions"
 "Getting filter statistics..."
 $filters = Invoke-SqlQuery "Filters"
+"Getting Address Counts"
+$addresses = Invoke-SqlQuery "TopAddresses"
+$spammers = Invoke-SqlQuery "TopSpammers"
 "Building report."
 
 $totalMails = $blockedMessageStatistics | Where-Object {$_.Direction -eq "Summary" -and $_.Status -eq "Summary"} | Select-Object -ExpandProperty Count -First 1
@@ -108,9 +113,17 @@ $cyrenIPRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "cyrenIp
 $characterSetRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "characterSetFilter" } | Select-Object -ExpandProperty Count -First 1)
 $wordRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "wordFilter" } | Select-Object -ExpandProperty Count -First 1)
 $rdnsPermanentRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "reputation" } | Select-Object -ExpandProperty Count -First 1)
-$cyrenAVRejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count).Sum)
-$contentrejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count).Sum)
+$cyrenAVRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count)
+$contentrejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count)
 $decryptPolicyRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "validateSignatureAndDecrypt" } | Select-Object -ExpandProperty Count -First 1)
+
+$topSpammers = $spammers | select -first $TopAddressesCount
+
+$ownDomains = (Get-NspOwnedDomain).Domain
+$topRecipientsOutgoing = ($addresses | ?{$_.AddressType -eq "Recipient" -and $_.Address -notin $ExcludeFromTopAddresses -and $_.Domain -in $ownDomains} | Sort Count -Descending | select -First $TopAddressesCount)
+$topSendersOutgoing = ($addresses | ?{$_.AddressType -eq "Sender" -and $_.Address -notin $ExcludeFromTopAddresses -and $_.Domain -in $ownDomains} | Sort Count -Descending | select -First $TopAddressesCount)
+$topSendersIncoming = ($addresses | ?{$_.AddressType -eq "Recipient" -and $_.Address -notin $ExcludeFromTopAddresses -and $_.Domain -notin $ownDomains} | Sort Count -Descending | select -First $TopAddressesCount)
+$topRecipientsIncoming = ($addresses | ?{$_.AddressType -eq "Sender" -and $_.Address -notin $ExcludeFromTopAddresses -and $_.Domain -notin $ownDomains} | Sort Count -Descending | select -First $TopAddressesCount)
 
 "Retrieving number of mails with invalid recipients"
 if ($TreatUnkownAsSpam) {
@@ -121,6 +134,7 @@ else{
 }
 
 $mailsprocessed = $totalMails
+
 
 if ($inboundmessages -eq 0) {
     $blockedpercentage = 0
@@ -164,53 +178,82 @@ Write-Host "Unknown recipients": $MailsToInvalidRecipients
 Write-Host " "
 Write-Host "Sending E-Mail to " $ReportRecipient "..."
 
-$htmlout = "<html>
+$global:htmlout = "<html>
 		<head>
 			<title>Auswertung der abgewiesenen E-Mails</title>
 			<style>
-      			table, td, th { border: 1px solid #00cc00; border-collapse: collapse; }
-				th, td {padding-left:1em; padding-right:1em;}
-				td:not(:first-child){text-align:right;}
-				th {color:white;}
-				#headerzeile         {background-color: #00cc00;}
+                table {border-spacing: 0px; border: 1px solid black; background-color: #3867d6; float:left; margin:10px}
+
+                th {padding: 10px; color: white;}
+      			td {padding: 6px 10px; color: white;}
+
+                tr.newsegment>td,tr.newsegment>th {border-top-color: black; border-top-width: 1px; border-top-style: solid;}
+
+                tr.sub>td {background-color: #4b7bec;}
+                tr.sub>td:first-of-type {border-left-color: #3867d6;border-left-style:solid;border-left-width:8px}
+                
     		</style>
 		</head>
 	<body style=font-family:arial>
 		<table>
-			<tr id=headerzeile><th>"+ $dateFrom +" bis "+ $dateTo +" ("+$NumberOfDaysToReport+" Tage)</th><th>Count</th><th>Percent</th></tr>
+			<tr><th>"+ $dateFrom +" bis "+ $dateTo +" ("+$NumberOfDaysToReport+" Tage)</th><th>Count</th><th>Percent</th></tr>
 			<tr><td>Mails Processed</td><td>" + $mailsprocessed +"</td><td>&nbsp;</td></tr>
-			<tr><td>Sent</td><td>" + $outboundmessages +"</td><td>&nbsp;</td></tr>
-			<tr><td>Received</td><td>" + $inboundmessages +"</td><td>&nbsp;</td></tr>
-			<tr><td>Mails to invalid recipients</td><td>" + $MailsToInvalidRecipients +"</td><td>" + $MailsToInvalidRecipientsPercentage + " %</td></tr>
-			<tr><td>Mails blocked due to Spam, Virus or Policy violation</td><td>" + $SpamRejected +"</td><td>" + $blockedpercentage +" %</td></tr>
-			<tr><td>Realtime Blocklist Check</td><td>" + $rblRejected +"</td><td>" + $rblRejectedpercentage +" %</td></tr>
-			<tr><td>Reputation Check</td><td>" + $rdnsPermanentRejected +"</td><td>" + $reputationFilterRejectedpercentage +" %</td></tr>
-			<tr><td>Cyren IP Reputation</td><td>" + $cyrenIPRejected +"</td><td>" + $cyrenIPBlockpercentage +" %</td></tr>
-			<tr><td>Cyren AntiSpam</td><td>" + $cyrenSpamRejected +"</td><td>" + $cyrenspamblockpercentage +" %</td></tr>
-			<tr><td>Cyren Premium AntiVirus</td><td>" + $cyrenAVRejected +"</td><td>" + $cyrenavblockpercentage +" %</td></tr>
-			<tr><td>Spam URI Realtime Blocklists</td><td>" + $surblRejected +"</td><td>" + $surblblockedpercentage +" %</td></tr>
-			<tr><td>Allowed Unicode Character Sets</td><td>" + $characterSetRejected +"</td><td>" + $charactersetblockedpercentage +" %</td></tr>
-			<tr><td>Word Matching</td><td>" + $wordRejected +"</td><td>" + $wordrejectedblockedpercentage +" %</td></tr>
-			<tr><td>DecryptPolicy Reject</td><td>" + $decryptPolicyRejected +"</td><td>" + $decryptpolicyblockedpercentage +" %</td></tr>
-			<tr><td>ContentFiltering</td><td>" + $contentrejected + "</td><td>" + $contentrejectedpercentage + " %</td></tr>
-			<tr><td>Greylisting</td><td>" + $greylistrejected + "</td><td>" + $greylistrejectedpercentage + " %</td></tr>
-		</table>
-	</body>
-	</html>"
+            <tr class=`"sub`"><td>Sent</td><td>" + $outboundmessages +"</td><td>&nbsp;</td></tr>
+			<tr class=`"sub`"><td>Received</td><td>" + $inboundmessages +"</td><td>&nbsp;</td></tr>
+           
+			<tr class=`"newsegment`"><td>Mails blocked</td><td>" + $SpamRejected +"</td><td>" + $blockedpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Realtime Blocklist Check</td><td>" + $rblRejected +"</td><td>" + $rblRejectedpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Reputation Check</td><td>" + $rdnsPermanentRejected +"</td><td>" + $reputationFilterRejectedpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Cyren AntiSpam</td><td>" + $cyrenSpamRejected +"</td><td>" + $cyrenspamblockpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Cyren Premium AntiVirus</td><td>" + $cyrenAVRejected +"</td><td>" + $cyrenavblockpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Cyren IP Reputation</td><td>" + $cyrenIPRejected +"</td><td>" + $cyrenIPBlockpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Spam URI Realtime Blocklists</td><td>" + $surblRejected +"</td><td>" + $surblblockedpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Allowed Unicode Character Sets</td><td>" + $characterSetRejected +"</td><td>" + $charactersetblockedpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>Word Matching</td><td>" + $wordRejected +"</td><td>" + $wordrejectedblockedpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>DecryptPolicy Reject</td><td>" + $decryptPolicyRejected +"</td><td>" + $decryptpolicyblockedpercentage +" %</td></tr>
+			<tr class=`"sub`"><td>ContentFiltering</td><td>" + $contentrejected + "</td><td>" + $contentrejectedpercentage + " %</td></tr>
+			<tr class=`"sub`"><td>Greylisting</td><td>" + $greylistrejected + "</td><td>" + $greylistrejectedpercentage + " %</td></tr>
+            <tr class=`"newsegment`"><td>Mails to Invalid Recipients</td><td>$MailsToInvalidRecipients</td><td>$MailsToInvalidRecipientsPercentage %</td></tr>
+        </table>"
 
+function enumerateAddressList($addrlist) {
+    foreach($addr in $addrlist) {
+        $global:htmlout += "<tr class=`"sub`"><td>" + $addr.Address + "</td><td>" + $addr.Count + "</td><td>&nbsp;</td></tr>"
+    }
+}
+
+$global:htmlout += "<table>
+            <tr><th>Top Local E-Mail Addresses</th><th>Count</th><td>&nbsp;</td></tr>
+            <tr><td>Most E-Mails From</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
+enumerateAddressList($topSendersOutgoing)
+$global:htmlout += "<tr class=`"newsegment`"><td>Most E-Mails To</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
+enumerateAddressList($topRecipientsIncoming)
+$global:htmlout += "</table>"
+
+
+
+$global:htmlout += "<table>
+            <tr><th>Top External E-Mail Addresses</th><th>Count</th><td>&nbsp;</td></tr>
+            <tr><td>Most E-Mails From</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
+enumerateAddressList($topSendersIncoming)
+$global:htmlout += "<tr class=`"newsegment`"><td>Most E-Mails To</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
+enumerateAddressList($topRecipientsOutgoing)
+$global:htmlout += "<tr class=`"newsegment`"><td>Top Spammers</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
+enumerateAddressList($topSpammers)
+$global:htmlout += "</table>"
 
 $htmlout | Out-File $reportFileName
+
 "Sending report to $ReportRecipient"
 Send-MailMessage -SmtpServer $SmtpHost -From $ReportSender -To $ReportRecipient -Subject $ReportSubject -Body "Im Anhang dieser E-Mail finden Sie den Bericht mit der Auswertung der abgewiesenen E-Mails." -Attachments $reportFileName
 Write-Host "Doing some cleanup.."
 Remove-Item $reportFileName
 Write-Host "Done."
-
 # SIG # Begin signature block
 # MIIMSwYJKoZIhvcNAQcCoIIMPDCCDDgCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUiG44lhh90GoHSBKh73tojiSW
-# XWKgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUlRTGUTam5JntnZ2C2ldkxVz4
+# /VWgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -266,11 +309,11 @@ Write-Host "Done."
 # EydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2IC0gRzMCDFH6/Cfo
 # wsq+AMu2DTAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZ
 # BgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYB
-# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUfxdyXx2Ryhxm6Ca6UQAzJW3ZGpYwDQYJ
-# KoZIhvcNAQEBBQAEggEACA5tw9ngZr5JF1bgVRRv8gY6w47fmuhXoabgd0XJ7Ua1
-# VGYDRcJEpCO5o25XSKJQrJ9pCxw1Xtl2cvO5QevNhkJtsxlxWzZAoz7Ly1TyZWCR
-# lNCkVTfUrv9NUEB8jYx4MfeGEZm+eGL0aO+dKDhTIbeWyrVwECxEpP5DT29KLh+r
-# Aqh4s5bfyYvX5s11tL0uvJ23jtH8n2W3X/rsC5yPy7OYUVImujDawkYBn3J4cPoH
-# OE4CZvD5XJtqqxCRrRSPu1mu89S4oN+GPq5+VcgWkwRKe30Ijj4pb89378jhBv8l
-# NxnJC3U4jL+mdIe/gbKSVoG1W2rphGUVZRYrqaV4mw==
+# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUXPoxwd61krGCQ35Hfwr3YfFBbB0wDQYJ
+# KoZIhvcNAQEBBQAEggEAa8ImzjIYASBAQH5sMHNNY9zLVSOtsfTBBfzOgm3X/CPc
+# jdtm7RIJ0heBnofiX/g08K5E87w0X1brXH00gxKOC3eju7ETpdodFYk3qIATFntS
+# afvV83pMxd6r7O8MyzxXidGd8BKwkdtKpqN2EcqeFEEk2XpWOjmwxrDNZkMoNwKY
+# H6dKyaoh/PTE5uvOuuCNptEPPYw7KRJ7189qtik3AFDHC2JoJwu+CJw6axSmHCxe
+# pdSgKR3WsVQDUgIWNAEzyRbaBIneD3hcCikpJGrcFNtGi340xckgSUBYMS3ArpUz
+# gpZ4LBFet/Waag3HNxUpQFTTXGGEv9vp9oMxyDVnRg==
 # SIG # End signature block

@@ -6,5 +6,5 @@ select count(*) id from messagetracking.messagetrackentry mt
 		select 1
 			from messagetracking.messageaddress mr
 			join messagetracking.deliveryattempt da on da.MessageAddressId = mr.Id
-			where mr.MessageTrackId = mt.id and (da.Status <> 4 or da.StatusMessage <> N'Recipient unknown' OR da.StatusMessage is null)
+			where mr.MessageTrackId = mt.id and (da.Status <> 4 or da.StatusMessage <> 'Recipient unknown' OR da.StatusMessage is null)
 		)
