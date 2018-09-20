@@ -113,8 +113,13 @@ $cyrenIPRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "cyrenIp
 $characterSetRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "characterSetFilter" } | Select-Object -ExpandProperty Count -First 1)
 $wordRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "wordFilter" } | Select-Object -ExpandProperty Count -First 1)
 $rdnsPermanentRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "reputation" } | Select-Object -ExpandProperty Count -First 1)
+<<<<<<< HEAD
 $cyrenAVRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count)
 $contentrejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count)
+=======
+$cyrenAVRejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count))
+$contentrejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count))
+>>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
 $decryptPolicyRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "validateSignatureAndDecrypt" } | Select-Object -ExpandProperty Count -First 1)
 
 $topSpammers = $spammers | select -first $TopAddressesCount
@@ -198,6 +203,7 @@ $global:htmlout = "<html>
 		<table>
 			<tr><th>"+ $dateFrom +" bis "+ $dateTo +" ("+$NumberOfDaysToReport+" Tage)</th><th>Count</th><th>Percent</th></tr>
 			<tr><td>Mails Processed</td><td>" + $mailsprocessed +"</td><td>&nbsp;</td></tr>
+<<<<<<< HEAD
             <tr class=`"sub`"><td>Sent</td><td>" + $outboundmessages +"</td><td>&nbsp;</td></tr>
 			<tr class=`"sub`"><td>Received</td><td>" + $inboundmessages +"</td><td>&nbsp;</td></tr>
            
@@ -215,6 +221,26 @@ $global:htmlout = "<html>
 			<tr class=`"sub`"><td>Greylisting</td><td>" + $greylistrejected + "</td><td>" + $greylistrejectedpercentage + " %</td></tr>
             <tr class=`"newsegment`"><td>Mails to Invalid Recipients</td><td>$MailsToInvalidRecipients</td><td>$MailsToInvalidRecipientsPercentage %</td></tr>
         </table>"
+=======
+			<tr><td>Sent</td><td>" + $outboundmessages +"</td><td>&nbsp;</td></tr>
+			<tr><td>Received</td><td>" + $inboundmessages +"</td><td>&nbsp;</td></tr>
+			<tr><td>Mails to invalid recipients</td><td>" + $MailsToInvalidRecipients +"</td><td>" + $MailsToInvalidRecipientsPercentage + " %</td></tr>
+			<tr><td>Mails blocked due to Spam, Virus or Policy violation</td><td>" + $SpamRejected +"</td><td>" + $blockedpercentage +" %</td></tr>
+			<tr><td>Realtime Blocklist Check</td><td>" + $rblRejected +"</td><td>" + $rblRejectedpercentage +" %</td></tr>
+			<tr><td>Reputation Check</td><td>" + $rdnsPermanentRejected +"</td><td>" + $reputationFilterRejectedpercentage +" %</td></tr>
+			<tr><td>Cyren IP Reputation</td><td>" + $cyrenIPRejected +"</td><td>" + $cyrenIPBlockpercentage +" %</td></tr>
+			<tr><td>Cyren AntiSpam</td><td>" + $cyrenSpamRejected +"</td><td>" + $cyrenspamblockpercentage +" %</td></tr>
+			<tr><td>Cyren AntiVirus</td><td>" + $cyrenAVRejected +"</td><td>" + $cyrenavblockpercentage +" %</td></tr>
+			<tr><td>Spam URI Realtime Blocklists</td><td>" + $surblRejected +"</td><td>" + $surblblockedpercentage +" %</td></tr>
+			<tr><td>Allowed Unicode Character Sets</td><td>" + $characterSetRejected +"</td><td>" + $charactersetblockedpercentage +" %</td></tr>
+			<tr><td>Word Matching</td><td>" + $wordRejected +"</td><td>" + $wordrejectedblockedpercentage +" %</td></tr>
+			<tr><td>DecryptPolicy Reject</td><td>" + $decryptPolicyRejected +"</td><td>" + $decryptpolicyblockedpercentage +" %</td></tr>
+			<tr><td>ContentFiltering</td><td>" + $contentrejected + "</td><td>" + $contentrejectedpercentage + " %</td></tr>
+			<tr><td>Greylisting</td><td>" + $greylistrejected + "</td><td>" + $greylistrejectedpercentage + " %</td></tr>
+		</table>
+	</body>
+	</html>"
+>>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
 
 function enumerateAddressList($addrlist) {
     foreach($addr in $addrlist) {
@@ -252,8 +278,13 @@ Write-Host "Done."
 # SIG # Begin signature block
 # MIIMSwYJKoZIhvcNAQcCoIIMPDCCDDgCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
+<<<<<<< HEAD
 # AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUlRTGUTam5JntnZ2C2ldkxVz4
 # /VWgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+=======
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUwktgkpiFmH/pr0DDP2TQBfy/
+# 6eSgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+>>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -309,6 +340,7 @@ Write-Host "Done."
 # EydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2IC0gRzMCDFH6/Cfo
 # wsq+AMu2DTAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZ
 # BgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYB
+<<<<<<< HEAD
 # BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUXPoxwd61krGCQ35Hfwr3YfFBbB0wDQYJ
 # KoZIhvcNAQEBBQAEggEAa8ImzjIYASBAQH5sMHNNY9zLVSOtsfTBBfzOgm3X/CPc
 # jdtm7RIJ0heBnofiX/g08K5E87w0X1brXH00gxKOC3eju7ETpdodFYk3qIATFntS
@@ -316,4 +348,13 @@ Write-Host "Done."
 # H6dKyaoh/PTE5uvOuuCNptEPPYw7KRJ7189qtik3AFDHC2JoJwu+CJw6axSmHCxe
 # pdSgKR3WsVQDUgIWNAEzyRbaBIneD3hcCikpJGrcFNtGi340xckgSUBYMS3ArpUz
 # gpZ4LBFet/Waag3HNxUpQFTTXGGEv9vp9oMxyDVnRg==
+=======
+# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUGKdb1Q0ZrN7OulRDjfNQnpD7biEwDQYJ
+# KoZIhvcNAQEBBQAEggEAfZFXBPOY3OH2EqYuEaAdZoLQE3vOBDQv52F64GCe34bh
+# tw2zmClRFAFkYusdb9/M+LniNca5PZjA5yoEPgkw2lM6zyIr+plyhwdic31FPKGe
+# IMgAHL4c0WvW8tfrLSvdCnBh3lnkTG/8DgZ/8nFJnOYZESZV4itRbr6mSTFEqOaE
+# zPIgipfIb1edvSDCGjhRJhIHonxr5BiAMbz5bRUS2Xu9h+qaPFICZg4b7Qx2TU6M
+# 170KQrkmDsPKXOKeINsQS1xYOae6FCr2XyjZyDVysYDd7EQqxD8ZHwhYf5Eg7lTF
+# fU5q9Tg54gUBktbkhqWyVYzv3BUSMBQXljrFAcF88A==
+>>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
 # SIG # End signature block
