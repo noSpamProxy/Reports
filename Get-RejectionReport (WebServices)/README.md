@@ -21,6 +21,8 @@ Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysTo
 - **ReportSubject**: Optional. Specifies the Subject of the email. Default value is "Auswertung".
 - **NumberOfDaysToReport**: Optional. Specifies the Number of days to report. Default value is "7".
 - **ReportSender**: Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
+- **TopAddressesCount**: Optional. How many Addresses to include in the top Senders/Recipients/Spammers. Defaults to 5
+- **ExcludeFromTopAddresses**: Optional. Specify addresses to ignore when evaluating top Senders/Recipients. Useful for dropping obvious addresses from the list to get a more informative statistic
 
 ## Example
 
