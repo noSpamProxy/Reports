@@ -16,7 +16,7 @@ Get-NspLicenseReport -ExportFilePath
 ## Example
 
 ```ps
-.\Get-NspLicensReport.ps1 -ExportFilePath Usage.txt
+.\Get-NspLicenseReport.ps1 -ExportFilePath Usage.txt
 ```
 
 ## Supported NoSpamProxy Versions
