@@ -113,13 +113,8 @@ $cyrenIPRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "cyrenIp
 $characterSetRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "characterSetFilter" } | Select-Object -ExpandProperty Count -First 1)
 $wordRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "wordFilter" } | Select-Object -ExpandProperty Count -First 1)
 $rdnsPermanentRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "reputation" } | Select-Object -ExpandProperty Count -First 1)
-<<<<<<< HEAD
-$cyrenAVRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count)
-$contentrejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count)
-=======
 $cyrenAVRejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count))
 $contentrejected = Coalesce-Zero (($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count))
->>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
 $decryptPolicyRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "validateSignatureAndDecrypt" } | Select-Object -ExpandProperty Count -First 1)
 
 $topSpammers = $spammers | select -first $TopAddressesCount
@@ -139,7 +134,6 @@ else{
 }
 
 $mailsprocessed = $totalMails
-
 
 if ($inboundmessages -eq 0) {
     $blockedpercentage = 0
@@ -187,41 +181,24 @@ $global:htmlout = "<html>
 		<head>
 			<title>Auswertung der abgewiesenen E-Mails</title>
 			<style>
-                table {border-spacing: 0px; border: 1px solid black; background-color: #3867d6; float:left; margin:10px}
 
-                th {padding: 10px; color: white;}
-      			td {padding: 6px 10px; color: white;}
 
-                tr.newsegment>td,tr.newsegment>th {border-top-color: black; border-top-width: 1px; border-top-style: solid;}
 
-                tr.sub>td {background-color: #4b7bec;}
-                tr.sub>td:first-of-type {border-left-color: #3867d6;border-left-style:solid;border-left-width:8px}
-                
+
+
+
+
+      			table, td, th { border: 1px solid #00cc00; border-collapse: collapse; }
+				th, td {padding-left:1em; padding-right:1em;}
+				td:not(:first-child){text-align:right;}
+				th {color:white;}
+				#headerzeile         {background-color: #00cc00;}
     		</style>
 		</head>
 	<body style=font-family:arial>
 		<table>
-			<tr><th>"+ $dateFrom +" bis "+ $dateTo +" ("+$NumberOfDaysToReport+" Tage)</th><th>Count</th><th>Percent</th></tr>
+			<tr id=headerzeile><th>"+ $dateFrom +" bis "+ $dateTo +" ("+$NumberOfDaysToReport+" Tage)</th><th>Count</th><th>Percent</th></tr>
 			<tr><td>Mails Processed</td><td>" + $mailsprocessed +"</td><td>&nbsp;</td></tr>
-<<<<<<< HEAD
-            <tr class=`"sub`"><td>Sent</td><td>" + $outboundmessages +"</td><td>&nbsp;</td></tr>
-			<tr class=`"sub`"><td>Received</td><td>" + $inboundmessages +"</td><td>&nbsp;</td></tr>
-           
-			<tr class=`"newsegment`"><td>Mails blocked</td><td>" + $SpamRejected +"</td><td>" + $blockedpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Realtime Blocklist Check</td><td>" + $rblRejected +"</td><td>" + $rblRejectedpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Reputation Check</td><td>" + $rdnsPermanentRejected +"</td><td>" + $reputationFilterRejectedpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Cyren AntiSpam</td><td>" + $cyrenSpamRejected +"</td><td>" + $cyrenspamblockpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Cyren Premium AntiVirus</td><td>" + $cyrenAVRejected +"</td><td>" + $cyrenavblockpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Cyren IP Reputation</td><td>" + $cyrenIPRejected +"</td><td>" + $cyrenIPBlockpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Spam URI Realtime Blocklists</td><td>" + $surblRejected +"</td><td>" + $surblblockedpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Allowed Unicode Character Sets</td><td>" + $characterSetRejected +"</td><td>" + $charactersetblockedpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>Word Matching</td><td>" + $wordRejected +"</td><td>" + $wordrejectedblockedpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>DecryptPolicy Reject</td><td>" + $decryptPolicyRejected +"</td><td>" + $decryptpolicyblockedpercentage +" %</td></tr>
-			<tr class=`"sub`"><td>ContentFiltering</td><td>" + $contentrejected + "</td><td>" + $contentrejectedpercentage + " %</td></tr>
-			<tr class=`"sub`"><td>Greylisting</td><td>" + $greylistrejected + "</td><td>" + $greylistrejectedpercentage + " %</td></tr>
-            <tr class=`"newsegment`"><td>Mails to Invalid Recipients</td><td>$MailsToInvalidRecipients</td><td>$MailsToInvalidRecipientsPercentage %</td></tr>
-        </table>"
-=======
 			<tr><td>Sent</td><td>" + $outboundmessages +"</td><td>&nbsp;</td></tr>
 			<tr><td>Received</td><td>" + $inboundmessages +"</td><td>&nbsp;</td></tr>
 			<tr><td>Mails to invalid recipients</td><td>" + $MailsToInvalidRecipients +"</td><td>" + $MailsToInvalidRecipientsPercentage + " %</td></tr>
@@ -240,51 +217,21 @@ $global:htmlout = "<html>
 		</table>
 	</body>
 	</html>"
->>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
-
-function enumerateAddressList($addrlist) {
-    foreach($addr in $addrlist) {
-        $global:htmlout += "<tr class=`"sub`"><td>" + $addr.Address + "</td><td>" + $addr.Count + "</td><td>&nbsp;</td></tr>"
-    }
-}
-
-$global:htmlout += "<table>
-            <tr><th>Top Local E-Mail Addresses</th><th>Count</th><td>&nbsp;</td></tr>
-            <tr><td>Most E-Mails From</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
-enumerateAddressList($topSendersOutgoing)
-$global:htmlout += "<tr class=`"newsegment`"><td>Most E-Mails To</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
-enumerateAddressList($topRecipientsIncoming)
-$global:htmlout += "</table>"
 
 
 
-$global:htmlout += "<table>
-            <tr><th>Top External E-Mail Addresses</th><th>Count</th><td>&nbsp;</td></tr>
-            <tr><td>Most E-Mails From</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
-enumerateAddressList($topSendersIncoming)
-$global:htmlout += "<tr class=`"newsegment`"><td>Most E-Mails To</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
-enumerateAddressList($topRecipientsOutgoing)
-$global:htmlout += "<tr class=`"newsegment`"><td>Top Spammers</td><td>&nbsp;</td><td>&nbsp;</td></tr>"
-enumerateAddressList($topSpammers)
-$global:htmlout += "</table>"
 
 $htmlout | Out-File $reportFileName
-
 "Sending report to $ReportRecipient"
 Send-MailMessage -SmtpServer $SmtpHost -From $ReportSender -To $ReportRecipient -Subject $ReportSubject -Body "Im Anhang dieser E-Mail finden Sie den Bericht mit der Auswertung der abgewiesenen E-Mails." -Attachments $reportFileName
 Write-Host "Doing some cleanup.."
 Remove-Item $reportFileName
 Write-Host "Done."
 # SIG # Begin signature block
-# MIIMSwYJKoZIhvcNAQcCoIIMPDCCDDgCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# MIIbnQYJKoZIhvcNAQcCoIIbjjCCG4oCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-<<<<<<< HEAD
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUlRTGUTam5JntnZ2C2ldkxVz4
-# /VWgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
-=======
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUwktgkpiFmH/pr0DDP2TQBfy/
-# 6eSgggmqMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
->>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU6N1J0Ai/jL9ZBSL72mtdW+6r
+# BbGgghbpMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -335,26 +282,98 @@ Write-Host "Done."
 # LYv+3eLEwglMw/6Gmlq9IqNSD8YmTncGZFoFhrCrgAZUkA6RiVxuZrx2wiluueBI
 # vfGs+tRA+7Tgx6Ed9kBybnc+xbAiTCNIcSo9OkPZfc3Q9saMgjIehBMXHLgMdrhv
 # N5HXv/r4+aZ6asgv3ggArHrS1Pxp0f60hooVK4bA4Ph1td6YZ5lf8HA4uMmHvOjQ
-# iNS0UjXqu5Vs6leIRM3pBjuX45xL6ydUsMlLhZQfansxggILMIICBwIBATBqMFox
-# CzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTAwLgYDVQQD
-# EydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2IC0gRzMCDFH6/Cfo
-# wsq+AMu2DTAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZ
-# BgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYB
-<<<<<<< HEAD
-# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUXPoxwd61krGCQ35Hfwr3YfFBbB0wDQYJ
-# KoZIhvcNAQEBBQAEggEAa8ImzjIYASBAQH5sMHNNY9zLVSOtsfTBBfzOgm3X/CPc
-# jdtm7RIJ0heBnofiX/g08K5E87w0X1brXH00gxKOC3eju7ETpdodFYk3qIATFntS
-# afvV83pMxd6r7O8MyzxXidGd8BKwkdtKpqN2EcqeFEEk2XpWOjmwxrDNZkMoNwKY
-# H6dKyaoh/PTE5uvOuuCNptEPPYw7KRJ7189qtik3AFDHC2JoJwu+CJw6axSmHCxe
-# pdSgKR3WsVQDUgIWNAEzyRbaBIneD3hcCikpJGrcFNtGi340xckgSUBYMS3ArpUz
-# gpZ4LBFet/Waag3HNxUpQFTTXGGEv9vp9oMxyDVnRg==
-=======
-# BAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUGKdb1Q0ZrN7OulRDjfNQnpD7biEwDQYJ
-# KoZIhvcNAQEBBQAEggEAfZFXBPOY3OH2EqYuEaAdZoLQE3vOBDQv52F64GCe34bh
-# tw2zmClRFAFkYusdb9/M+LniNca5PZjA5yoEPgkw2lM6zyIr+plyhwdic31FPKGe
-# IMgAHL4c0WvW8tfrLSvdCnBh3lnkTG/8DgZ/8nFJnOYZESZV4itRbr6mSTFEqOaE
-# zPIgipfIb1edvSDCGjhRJhIHonxr5BiAMbz5bRUS2Xu9h+qaPFICZg4b7Qx2TU6M
-# 170KQrkmDsPKXOKeINsQS1xYOae6FCr2XyjZyDVysYDd7EQqxD8ZHwhYf5Eg7lTF
-# fU5q9Tg54gUBktbkhqWyVYzv3BUSMBQXljrFAcF88A==
->>>>>>> 1b2536801137754ec91ff8058140b17bc613c1d3
+# iNS0UjXqu5Vs6leIRM3pBjuX45xL6ydUsMlLhZQfanswggZqMIIFUqADAgECAhAD
+# AZoCOv9YsWvW1ermF/BmMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMRUw
+# EwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20x
+# ITAfBgNVBAMTGERpZ2lDZXJ0IEFzc3VyZWQgSUQgQ0EtMTAeFw0xNDEwMjIwMDAw
+# MDBaFw0yNDEwMjIwMDAwMDBaMEcxCzAJBgNVBAYTAlVTMREwDwYDVQQKEwhEaWdp
+# Q2VydDElMCMGA1UEAxMcRGlnaUNlcnQgVGltZXN0YW1wIFJlc3BvbmRlcjCCASIw
+# DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKNkXfx8s+CCNeDg9sYq5kl1O8xu
+# 4FOpnx9kWeZ8a39rjJ1V+JLjntVaY1sCSVDZg85vZu7dy4XpX6X51Id0iEQ7Gcnl
+# 9ZGfxhQ5rCTqqEsskYnMXij0ZLZQt/USs3OWCmejvmGfrvP9Enh1DqZbFP1FI46G
+# RFV9GIYFjFWHeUhG98oOjafeTl/iqLYtWQJhiGFyGGi5uHzu5uc0LzF3gTAfuzYB
+# je8n4/ea8EwxZI3j6/oZh6h+z+yMDDZbesF6uHjHyQYuRhDIjegEYNu8c3T6Ttj+
+# qkDxss5wRoPp2kChWTrZFQlXmVYwk/PJYczQCMxr7GJCkawCwO+k8IkRj3cCAwEA
+# AaOCAzUwggMxMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBYGA1UdJQEB
+# /wQMMAoGCCsGAQUFBwMIMIIBvwYDVR0gBIIBtjCCAbIwggGhBglghkgBhv1sBwEw
+# ggGSMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2VydC5jb20vQ1BTMIIB
+# ZAYIKwYBBQUHAgIwggFWHoIBUgBBAG4AeQAgAHUAcwBlACAAbwBmACAAdABoAGkA
+# cwAgAEMAZQByAHQAaQBmAGkAYwBhAHQAZQAgAGMAbwBuAHMAdABpAHQAdQB0AGUA
+# cwAgAGEAYwBjAGUAcAB0AGEAbgBjAGUAIABvAGYAIAB0AGgAZQAgAEQAaQBnAGkA
+# QwBlAHIAdAAgAEMAUAAvAEMAUABTACAAYQBuAGQAIAB0AGgAZQAgAFIAZQBsAHkA
+# aQBuAGcAIABQAGEAcgB0AHkAIABBAGcAcgBlAGUAbQBlAG4AdAAgAHcAaABpAGMA
+# aAAgAGwAaQBtAGkAdAAgAGwAaQBhAGIAaQBsAGkAdAB5ACAAYQBuAGQAIABhAHIA
+# ZQAgAGkAbgBjAG8AcgBwAG8AcgBhAHQAZQBkACAAaABlAHIAZQBpAG4AIABiAHkA
+# IAByAGUAZgBlAHIAZQBuAGMAZQAuMAsGCWCGSAGG/WwDFTAfBgNVHSMEGDAWgBQV
+# ABIrE5iymQftHt+ivlcNK2cCzTAdBgNVHQ4EFgQUYVpNJLZJMp1KKnkag0v0HonB
+# yn0wfQYDVR0fBHYwdDA4oDagNIYyaHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0Rp
+# Z2lDZXJ0QXNzdXJlZElEQ0EtMS5jcmwwOKA2oDSGMmh0dHA6Ly9jcmw0LmRpZ2lj
+# ZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRENBLTEuY3JsMHcGCCsGAQUFBwEBBGsw
+# aTAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29tMEEGCCsGAQUF
+# BzAChjVodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRBc3N1cmVk
+# SURDQS0xLmNydDANBgkqhkiG9w0BAQUFAAOCAQEAnSV+GzNNsiaBXJuGziMgD4CH
+# 5Yj//7HUaiwx7ToXGXEXzakbvFoWOQCd42yE5FpA+94GAYw3+puxnSR+/iCkV61b
+# t5qwYCbqaVchXTQvH3Gwg5QZBWs1kBCge5fH9j/n4hFBpr1i2fAnPTgdKG86Ugnw
+# 7HBi02JLsOBzppLA044x2C/jbRcTBu7kA7YUq/OPQ6dxnSHdFMoVXZJB2vkPgdGZ
+# dA0mxA5/G7X1oPHGdwYoFenYk+VVFvC7Cqsc21xIJ2bIo4sKHOWV2q7ELlmgYd3a
+# 822iYemKC23sEhi991VUQAOSK2vCUcIKSK+w1G7g9BQKOhvjjz3Kr2qNe9zYRDCC
+# Bs0wggW1oAMCAQICEAb9+QOWA63qAArrPye7uhswDQYJKoZIhvcNAQEFBQAwZTEL
+# MAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3
+# LmRpZ2ljZXJ0LmNvbTEkMCIGA1UEAxMbRGlnaUNlcnQgQXNzdXJlZCBJRCBSb290
+# IENBMB4XDTA2MTExMDAwMDAwMFoXDTIxMTExMDAwMDAwMFowYjELMAkGA1UEBhMC
+# VVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3LmRpZ2ljZXJ0
+# LmNvbTEhMB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0xMIIBIjANBgkq
+# hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6IItmfnKwkKVpYBzQHDSnlZUXKnE0kEG
+# j8kz/E1FkVyBn+0snPgWWd+etSQVwpi5tHdJ3InECtqvy15r7a2wcTHrzzpADEZN
+# k+yLejYIA6sMNP4YSYL+x8cxSIB8HqIPkg5QycaH6zY/2DDD/6b3+6LNb3Mj/qxW
+# BZDwMiEWicZwiPkFl32jx0PdAug7Pe2xQaPtP77blUjE7h6z8rwMK5nQxl0SQoHh
+# g26Ccz8mSxSQrllmCsSNvtLOBq6thG9IhJtPQLnxTPKvmPv2zkBdXPao8S+v7Iki
+# 8msYZbHBc63X8djPHgp0XEK4aH631XcKJ1Z8D2KkPzIUYJX9BwSiCQIDAQABo4ID
+# ejCCA3YwDgYDVR0PAQH/BAQDAgGGMDsGA1UdJQQ0MDIGCCsGAQUFBwMBBggrBgEF
+# BQcDAgYIKwYBBQUHAwMGCCsGAQUFBwMEBggrBgEFBQcDCDCCAdIGA1UdIASCAckw
+# ggHFMIIBtAYKYIZIAYb9bAABBDCCAaQwOgYIKwYBBQUHAgEWLmh0dHA6Ly93d3cu
+# ZGlnaWNlcnQuY29tL3NzbC1jcHMtcmVwb3NpdG9yeS5odG0wggFkBggrBgEFBQcC
+# AjCCAVYeggFSAEEAbgB5ACAAdQBzAGUAIABvAGYAIAB0AGgAaQBzACAAQwBlAHIA
+# dABpAGYAaQBjAGEAdABlACAAYwBvAG4AcwB0AGkAdAB1AHQAZQBzACAAYQBjAGMA
+# ZQBwAHQAYQBuAGMAZQAgAG8AZgAgAHQAaABlACAARABpAGcAaQBDAGUAcgB0ACAA
+# QwBQAC8AQwBQAFMAIABhAG4AZAAgAHQAaABlACAAUgBlAGwAeQBpAG4AZwAgAFAA
+# YQByAHQAeQAgAEEAZwByAGUAZQBtAGUAbgB0ACAAdwBoAGkAYwBoACAAbABpAG0A
+# aQB0ACAAbABpAGEAYgBpAGwAaQB0AHkAIABhAG4AZAAgAGEAcgBlACAAaQBuAGMA
+# bwByAHAAbwByAGEAdABlAGQAIABoAGUAcgBlAGkAbgAgAGIAeQAgAHIAZQBmAGUA
+# cgBlAG4AYwBlAC4wCwYJYIZIAYb9bAMVMBIGA1UdEwEB/wQIMAYBAf8CAQAweQYI
+# KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5j
+# b20wQwYIKwYBBQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdp
+# Q2VydEFzc3VyZWRJRFJvb3RDQS5jcnQwgYEGA1UdHwR6MHgwOqA4oDaGNGh0dHA6
+# Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RDQS5jcmww
+# OqA4oDaGNGh0dHA6Ly9jcmw0LmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJ
+# RFJvb3RDQS5jcmwwHQYDVR0OBBYEFBUAEisTmLKZB+0e36K+Vw0rZwLNMB8GA1Ud
+# IwQYMBaAFEXroq/0ksuCMS1Ri6enIZ3zbcgPMA0GCSqGSIb3DQEBBQUAA4IBAQBG
+# UD7Jtygkpzgdtlspr1LPUukxR6tWXHvVDQtBs+/sdR90OPKyXGGinJXDUOSCuSPR
+# ujqGcq04eKx1XRcXNHJHhZRW0eu7NoR3zCSl8wQZVann4+erYs37iy2QwsDStZS9
+# Xk+xBdIOPRqpFFumhjFiqKgz5Js5p8T1zh14dpQlc+Qqq8+cdkvtX8JLFuRLcEwA
+# iR78xXm8TBJX/l/hHrwCXaj++wc4Tw3GXZG5D2dFzdaD7eeSDY2xaYxP+1ngIw/S
+# qq4AfO6cQg7PkdcntxbuD8O9fAqg7iwIVYUiuOsYGk38KiGtSTGDR5V3cdyxG0tL
+# HBCcdxTBnU8vWpUIKRAmMYIEHjCCBBoCAQEwajBaMQswCQYDVQQGEwJCRTEZMBcG
+# A1UEChMQR2xvYmFsU2lnbiBudi1zYTEwMC4GA1UEAxMnR2xvYmFsU2lnbiBDb2Rl
+# U2lnbmluZyBDQSAtIFNIQTI1NiAtIEczAgxR+vwn6MLKvgDLtg0wCQYFKw4DAhoF
+# AKB4MBgGCisGAQQBgjcCAQwxCjAIoAKAAKECgAAwGQYJKoZIhvcNAQkDMQwGCisG
+# AQQBgjcCAQQwHAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUwIwYJKoZIhvcN
+# AQkEMRYEFL8oB6UbbXTRbz87OrKRXqu2m/e8MA0GCSqGSIb3DQEBAQUABIIBAEKD
+# YP8BjbpEfcPMTJXbivUUiVn+8evbCvhPulR1dQDad9Af5KILRpduvH94oiZAl97j
+# hksbOg0Hc+ZiDg6cTzZsg8JbHNhmnzuXtfwt52Ku34BnieJXcpOpOpjDorHTOHHP
+# cDuWlmFsyDvCt+WJA7WEqttH+WlikpXJQ3WfiP8BjLSCUFFdu/k8puSE+1ECOCxK
+# B7oQHcRami8Mm+CjhjXkVhVVCLCEtOZ9EtrtIF9/V0XCu+Wg6X5ny0hVqXE5hQvv
+# bEcACeEVmZ1WVMXMFXtC+VYGTW0PBBA2Htlcscwr9tqTPHVxIUQS7zs5t/rTv/r+
+# eXkzBgPslGUBm28YGjahggIPMIICCwYJKoZIhvcNAQkGMYIB/DCCAfgCAQEwdjBi
+# MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3
+# d3cuZGlnaWNlcnQuY29tMSEwHwYDVQQDExhEaWdpQ2VydCBBc3N1cmVkIElEIENB
+# LTECEAMBmgI6/1ixa9bV6uYX8GYwCQYFKw4DAhoFAKBdMBgGCSqGSIb3DQEJAzEL
+# BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDQxNTExMzY0MVowIwYJKoZI
+# hvcNAQkEMRYEFCSBN8zocRt7f8GvXaHg0psSqKuQMA0GCSqGSIb3DQEBAQUABIIB
+# AGAwGF6nZ9f8qUb/Xjgt4ZJ8e46p7oIL7Pbygzeyp/6s/EtqMOactdjJJUTB6JeT
+# b/7QoIFsF1QaW/dQpGqdnIvxbQTiHRqHj25Hs9yAPavSh7zM67g2ZKo5Lok/u77s
+# egSfetxZhSZKQKxRyt3WieeNwH5TDd2sjdKE52JUL4Q3HW4VX6Y4fgJwNVdcAj9E
+# rU71JjXjvAZnDLxahkKgshAdcbIummSZjp9F4mSupN804miIfD4M3DuUKLeR7RSA
+# AFU9Y8aS26qzu5aqi7ZFzdspc7UFiDFzPaEbV8KBAxOj2DHYcxf+nvSrPXV+l6iv
+# LRCYmGrXkdzo3aa0m0Ie4bc=
 # SIG # End signature block
