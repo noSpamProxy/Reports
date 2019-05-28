@@ -112,8 +112,3 @@ Get-NspLicenseReport.ps1 -NoMail -SqlInstance ""
 ```
 Use the above instance name "" if you try to access the default SQL instance.  
 If there is aconnection problem and the NSP configuration shows an empty instance for the intranet-role under "Configuration -> NoSpamProxy components" than this instance example should work.
-
-
-## Supported NoSpamProxy Versions
-This script works for NoSpamProxy version 13 or higher. It depends on PowerShell version 4 (will be checked automatically).
-
