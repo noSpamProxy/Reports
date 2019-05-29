@@ -37,7 +37,7 @@ E.g.: alice@example.com, bob@example.com
 Set a filepath to an CSV file containing a list of report E-Mail recipient. Be aware about the needed CSV format, please watch the provided example.
 
 ### ReportSender
-**Default:** nospamproxy@example.com 
+**Default:** NoSpamProxy Report Sender <nospamproxy@example.com>
 Sets the report E-Mail sender address.
   
 ### ReportSubject
