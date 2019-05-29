@@ -37,7 +37,7 @@ E.g.: alice@example.com, bob@example.com
 Set a filepath to an CSV file containing a list of report E-Mail recipient. Be aware about the needed CSV format, please watch the provided example.
 
 ### ReportSender
-**Default:** NoSpamProxy Report Sender \<nospamproxy@example.com>  
+**Default:** nospamproxy@example.com 
 Sets the report E-Mail sender address.
   
 ### ReportSubject
@@ -77,12 +77,12 @@ If the parameter <NoMail> is used the files will be saved at the current locatio
 
 ### Example 1
 ```ps
-Get-NspLicenseReport.ps1 -ReportRecipient alice@example.com -ReportSender "NoSpamProxy Report Sender <nospamproxy@example.com>" -ReportSubject "Example Report" -SmtpHostmail.example.com
+Get-NspLicenseReport.ps1 -ReportRecipient alice@example.com -ReportSender nospamproxy@example.com -ReportSubject "Example Report" -SmtpHost mail.example.com
 ```
 
 ### Example 2
 ```ps
-Get-NspLicenseReport.ps1 -ReportRecipient alice@example.com -ReportSender "NoSpamProxy Report Sender <nospamproxy@example.com>" -ReportSubject "Example Report" -SmtpHost mail.example.com -ReportRecipientCSV "C:\Users\example\Documents\email-recipient.csv"
+Get-NspLicenseReport.ps1 -ReportRecipient alice@example.com -ReportSender nospamproxy@example.com -ReportSubject "Example Report" -SmtpHost mail.example.com -ReportRecipientCSV "C:\Users\example\Documents\email-recipient.csv"
 ```
 The CSV have to contain the header "Email" else the mail addresses cannot be read from the file.  
 
@@ -111,4 +111,4 @@ Therefore the script connects to the SQL Server "sql.example.com" and accesses t
 Get-NspLicenseReport.ps1 -NoMail -SqlInstance ""
 ```
 Use the above instance name "" if you try to access the default SQL instance.  
-If there is aconnection problem and the NSP configuration shows an empty instance for the intranet-role under "Configuration -> NoSpamProxy components" than this instance example should work.
+If there is a connection problem and the NSP configuration shows an empty instance for the intranet-role under "Configuration -> NoSpamProxy components" than this instance example should work.
