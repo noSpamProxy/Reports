@@ -17,7 +17,7 @@ Get-NspLicenseReport.ps1 [-NoMail] [[-ReportFileName] <String>] [[-ReportRecipie
 
 ## Parameters
 ### NoMail
-Does not generate an E-Mail and saves the genereated reports to the current execution location.  
+Does not generate an E-Mail and saves the generated reports to the current execution location.  
 Ideal for testing or manual script usage.
 
 ### ReportFileName
@@ -30,7 +30,7 @@ Define a part of the complete file name.
     C:\Users\example\Documents\2019-05-27_License_Report_example.com.txt  
 	
 ### ReportRecipient
-Specifies the E-Mail recipient. It is possible to pass a comma seperated list to address multiple recipients.  
+Specifies the E-Mail recipient. It is possible to pass a comma separated list to address multiple recipients.  
 E.g.: alice@example.com, bob@example.com
 
 ### ReportRecipientCSV
