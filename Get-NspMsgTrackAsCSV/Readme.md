@@ -16,20 +16,21 @@ Exports filtered message tracks to a CSV containing the following information:
 ## Usage 
 
 ```ps
-Get-NspMsgTrackAsCSV.ps1 -FromDate \<String> [-ToDate \<String>] [-Status \<String>] [-NspRule \<String>] [-MailRecipientCSV \<String>] [-NoMail] [-ReportFileName \<String>] [-ReportRecipient \<String[]>] [-ReportRecipientCSV \<String>] [-ReportSender \<String>] [-ReportSubject \<String>] [-SmtpHost \<String>] [\<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -FromDate <String> [-ToDate <String>] [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV.ps1 -NumberOfDaysToReport \<String> [-Status \<String>] [-NspRule \<String>] [-MailRecipientCSV \<String>] [-NoMail] [-ReportFileName \<String>] [-ReportRecipient \<String[]>] [-ReportRecipientCSV \<String>] [-ReportSender \<String>] [-ReportSubject \<String>] [-SmtpHost \<String>] [\<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -NumberOfDaysToReport <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV.ps1 -NumberOfHoursToReport \<Int32> [-Status \<String>] [-NspRule \<String>] [-MailRecipientCSV \<String>] [-NoMail] [-ReportFileName \<String>] [-ReportRecipient \<String[]>] [-ReportRecipientCSV \<String>] [-ReportSender \<String>] [-ReportSubject \<String>] [-SmtpHost \<String>] [\<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -NumberOfHoursToReport <Int32> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV.ps1 -ReportInterval \<String> [-Status \<String>] [-NspRule \<String>] [-MailRecipientCSV \<String>] [-NoMail] [-ReportFileName \<String>] [-ReportRecipient \<String[]>] [-ReportRecipientCSV \<String>] [-ReportSender \<String>] [-ReportSubject \<String>] [-SmtpHost \<String>] [\<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -ReportInterval <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV.ps1 -NoTime [-Status \<String>] [-NspRule \<String>] [-MailRecipientCSV \<String>] [-NoMail] [-ReportFileName \<String>] [-ReportRecipient \<String[]>] [-ReportRecipientCSV \<String>] [-ReportSender \<String>] [-ReportSubject \<String>] [-SmtpHost \<String>] [\<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -NoTime [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
 ```
+
 
 ## Parameters
 ### FromDate
