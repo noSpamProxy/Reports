@@ -28,6 +28,15 @@ Sends a report to every E-Mail address that contains all permanently blocked E-M
 * [NoSpamProxy 12.x and later](Send-ReporttoUserswithBlockedEmailsWithAttachment)
 * [NoSpamProxy 11.x](11.x/Send-ReporttoUserswithBlockedEmailsWithAttachment)
 
+## [Send-BlockReportToUsers](Send-BlockReportToUsers/Readme.md)
+
+Rewritten version of "Send-ReporttoUserswithAllBlockedEmails" with enhanced features.
+
+This script can be used to generate a report about E-Mails which where permanently blocked.  
+It is possible to filter the results for a specific time duration and sends the report only to specific or all affected users.  
+This script only uses the NoSpamProxy Powershell Cmdlets to generate the report file.
+
+
 
 ## [Get-DmarcReport](https://github.com/noSpamProxy/Reports/tree/master/Get-DMARCReport)
 
