@@ -58,3 +58,9 @@ This report displays a list of certificates in the certificate quarantine.
 ## [Get-NspMsgTrackAsCSV](https://github.com/noSpamProxy/Reports/tree/master/Get-NspMsgTrackAsCSV)
 
 This report exports the message track as CSV file.
+
+
+## [Get-NspTlsReport](https://github.com/noSpamProxy/Reports/tree/master/Get-NspTlsReport)
+
+This report generates a HTML which contains a overview of your email communication using TLS.
+Requires NSP version 13.0.19147.917 or later.
