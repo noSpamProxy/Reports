@@ -55,6 +55,6 @@ This report displays all expired certificates from e-mail servers that NoSpamPro
 
 This report displays a list of certificates in the certificate quarantine.
 
-## [msgTrackToCSV](https://github.com/noSpamProxy/Reports/tree/master/msgTrackToCSV)
+## [Get-NspMsgTrackAsCSV](https://github.com/noSpamProxy/Reports/tree/master/Get-NspMsgTrackAsCSV)
 
 This report exports the message track as CSV file.
