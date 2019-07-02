@@ -1,5 +1,7 @@
 # Get-NspTlsReport
 
+Requires NSP version 13.0.19147.917 or later.  
+
 Creates a HTML report containing the following data:
 
  - number of all inbound connections
