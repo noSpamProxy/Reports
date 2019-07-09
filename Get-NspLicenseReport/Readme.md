@@ -5,7 +5,8 @@ Generates a report for the usage of each module containing the following informa
  - Total Users who used the module
  - List of each user who used the module
  
-It is also possible to generate a domain based license report, please the alternative script therefore: [Get-NspLicenseReport_(Database)](https://github.com/noSpamProxy/Reports/tree/master/Get-NspLicenseReport_(Database))
+It is also possible to generate a domain based license report, please the alternative script therefore:  
+[Get-NspLicenseReport_(Database)](https://github.com/noSpamProxy/Reports/tree/master/Get-NspLicenseReport_(Database))
 
 
 ## Usage 
