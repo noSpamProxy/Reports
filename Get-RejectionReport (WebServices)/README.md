@@ -19,15 +19,15 @@ Get-RejectionReport -SMTPHost -ReportRecipient [-ReportSubject] [-NumberOfDaysTo
 - **SMTPHost**: Mandatory. Specifies the SMTP Host which will be used to send the email.
 - **ReportRecipient**: Mandatory. Specifies the Recipient of the email.
 - **ReportSubject**: Optional. Specifies the Subject of the email. Default value is "Auswertung".
+- **ReportSender**: Mandatory. Specifies the Sender of the email.
 - **NumberOfDaysToReport**: Optional. Specifies the Number of days to report. Default value is "7".
-- **ReportSender**: Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
 - **TopAddressesCount**: Optional. How many Addresses to include in the top Senders/Recipients/Spammers. Defaults to 5
 - **ExcludeFromTopAddresses**: Optional. Specify addresses to ignore when evaluating top Senders/Recipients. Useful for dropping obvious addresses from the list to get a more informative statistic
 
 ## Example
 
 ```ps
-.\Get-RejectionReport.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com`
+.\Get-RejectionReport.ps1 -SMTPHost mail.example.com -ReportRecipient admin@example.com` -ReportSender "NoSpamProxy Report Sender <nospamproxy@example.com>"
 ```
 
 ## Supported NoSpamProxy Versions
