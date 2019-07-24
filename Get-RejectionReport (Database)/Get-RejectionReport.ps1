@@ -109,13 +109,13 @@ $spammers = Invoke-SqlQuery "TopSpammers"
 $totalMails = $blockedMessageStatistics | Where-Object {$_.Direction -eq "Summary" -and $_.Status -eq "Summary"} | Select-Object -ExpandProperty Count -First 1
 $tempRejected = $blockedMessageStatistics | Where-Object {$_.Direction -eq "Inbound" -and ($_.Status -eq "Temporary Blocked")} | Select-Object -ExpandProperty Count -First 1
 $permanentRejected = $blockedMessageStatistics | Where-Object {$_.Direction -eq "Inbound" -and ($_.Status -eq "Permanently Blocked")} | Select-Object -ExpandProperty Count -First 1
-if ($null -eq $tempRejected -OR $null -eq $permanentRejected){
-	$totalRejected = 0
+if ($null -eq $tempRejected){
 	$tempRejected = 0
-	$permanentRejected = 0
-}else{
-	$totalRejected = $tempRejected + $permanentRejected
 }
+if ($null -eq $permanentRejected){
+	$permanentRejected = 0
+}
+$totalRejected = $tempRejected + $permanentRejected
 $totalRejected += $blockedMessageStatistics | Where-Object {$_.Direction -eq "Inbound" -and ($_.Status -eq "Temporary Blocked")} | Select-Object -ExpandProperty Count -First 1
 $inboundmessages = $blockedMessageStatistics | Where-Object {$_.Direction -eq "Inbound" -and $_.Status -eq "Summary"} | Select-Object -ExpandProperty Count -First 1
 $outboundmessages = $blockedMessageStatistics | Where-Object {$_.Direction -eq "Outbound" -and $_.Status -eq "Summary"} | Select-Object -ExpandProperty Count -First 1
@@ -130,7 +130,6 @@ $rdnsPermanentRejected = Coalesce-Zero ($filters |  Where-Object {$_.Name -eq "r
 $cyrenAVRejected = Coalesce-Zero (sumUp ($actions |  Where-Object {$_.Name -eq "cyrenAction" } | Select-Object -ExpandProperty Count))
 $contentrejected = Coalesce-Zero (sumUp ($actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count))
 $decryptPolicyRejected = Coalesce-Zero ($actions |  Where-Object {$_.Name -eq "validateSignatureAndDecrypt" } | Select-Object -ExpandProperty Count -First 1)
-$actions |  Where-Object {$_.Name -eq "ContentFiltering" } | Select-Object -ExpandProperty Count
 
 $topSpammers = $spammers | select -first $TopAddressesCount
 
@@ -247,8 +246,8 @@ Write-Host "Done."
 # SIG # Begin signature block
 # MIIbigYJKoZIhvcNAQcCoIIbezCCG3cCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUZKXH4r3+amOcxnL3bo3A7Hvo
-# dNmgghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU8syVo0Qz9N5qbvfyN4jaj25D
+# 9qygghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -374,22 +373,22 @@ Write-Host "Done."
 # LXNhMTAwLgYDVQQDEydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2
 # IC0gRzMCDF8qMMA1ngrijFda+DAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEK
 # MAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3
-# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUAFA9ONCaeOLffIcv
-# 5OynauWW2YQwDQYJKoZIhvcNAQEBBQAEggEABY286J1eaY7hZnwjq91Zj//AMUxH
-# msSD8uOJ4WwARm3M4Ge4KgwArb+vEKlInwzhpemOpfvnnpp4lhXFThGQvVjTTGxp
-# HXsjRyfYDFsfL2T3AAx1q8ttILPII8N1LxUbU4lDPirbLHdSPp21KO/ZC8cS629K
-# Sw6GOI0OgZqqJssmLpP8vgXxFUUK9vd/x+1dHTHTRTjgy29hMFTi/ipeVrBhU7bk
-# 1L1GcOg68exxgqqz/AtPZmVuguac/mR6YbMhw+/kxmIUR6awJiINA6Src4B4jjDM
-# BiGad1b747j9Vdgd0pzB4lilsQOOQS5t6cSJcND5XHTofBQyz4guoBTGNaGCAg8w
+# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUo04q1ZTl04hT873D
+# Thf89WyDNQswDQYJKoZIhvcNAQEBBQAEggEAr4plTeGv0ahAsG6zN2BQDnPsQKK5
+# LYDwjdjrUvdwY9joXWeqX1xLapr45UtHsO1e15Ci8aSw8Gd/fv9MAPTv0SNxicm2
+# R3t+NmkUhFijxHgElUqBSmyJBODAG+EcFOIIC/zvB9ATuhw18Keook1fIBXKn3dQ
+# 6XCBZHDHV3Erg1qpsbB/hy0+YBe/8GXMTSrLIRDOwmkhFoBMNCfVgX0xeSFLhxd+
+# O0DQWN+Q/LZ+OinGirDiDWKPgmobOKKe1kT0KKxPpNsfRiJro0a+o6q3Yq9h+Azo
+# 8NdQLOXzJ5u29aUC1NkdI3Yfy8OzREsKISmim4qMVWmXYNuWTd+wIChLUKGCAg8w
 # ggILBgkqhkiG9w0BCQYxggH8MIIB+AIBATB2MGIxCzAJBgNVBAYTAlVTMRUwEwYD
 # VQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xITAf
 # BgNVBAMTGERpZ2lDZXJ0IEFzc3VyZWQgSUQgQ0EtMQIQAwGaAjr/WLFr1tXq5hfw
 # ZjAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-# 9w0BCQUxDxcNMTkwNzE5MTMxNTA4WjAjBgkqhkiG9w0BCQQxFgQU1g+gRTKy0IJG
-# H1keLmwI5cHAsEowDQYJKoZIhvcNAQEBBQAEggEAMoao+ZWCslNQJdmVYmgmYVhZ
-# B9Ta+2dPpDS1MYnl+noz15oH1NTAJsnp6+RkBI+KZyGVJ0eUW4bCjPWDtJ3uDSdT
-# Zg/9hOWfXe7we1TqRyxYwTRTkfoxDMEDjNfWDVnNXTKxICHLxpM5Kq6qQkOv914y
-# BpdsPE8ulxh+ZrhQfEObm8XvloGzMVXSjFG9KFcYXFd6ks0B5TAnQqe7btsQ/62X
-# p9ncDur+XJn7eO7NqdfWY7/ce8u36JWK7kInqE1Ca4xAO3nLuSkPT1OykYMm4BN6
-# w9MT7KnQCu/e9974JlX3mFzGR6lsVvq82Mxod6riOL47MyCOUt22W3EzwEFvGg==
+# 9w0BCQUxDxcNMTkwNzI0MTI1NTI2WjAjBgkqhkiG9w0BCQQxFgQUgDnX/ugbdxBm
+# gFRKpVzWNm0gUMswDQYJKoZIhvcNAQEBBQAEggEAUWniERwl/+XiXThmjrDhPmHn
+# fkS4E9Mpx0U4nIW0ImeDQtfjMa9EZzA9x1RqBtsGeW7Gr65HmR0g1N9aTYEXvKtd
+# TTm/cvppGgZjlT2RulD5/K/igpjXee77KnfCHXPj8bttI3qucPn0nsnx8Ln0Wm4N
+# mqWYurkGrle0UJkBgrstOa/NHZxAMtZgrd+zYaQV/+CJLyxr+WpbkTF3EhVQ3Hh2
+# 903JHkzBy9bE6vtxWUzEkx3WrR6QibPnPYYuwlSFcuD9dJik/DCotKtFKhMPysOO
+# TQ1aY3rF7wEVyotgiyQVyG0wrgYQazKqkTCCQV24qqol20AhGICoWFD8IFbx+w==
 # SIG # End signature block
