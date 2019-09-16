@@ -124,6 +124,11 @@ foreach ($item in $messageTracks)
 			$cyrenAVRejected++
 			$onBodyRejected++
 		}
+		if ($action.Name -eq "malwareScan" -and $action.Decision -notcontains "Pass")
+		{
+			$cyrenAVRejected++
+			$onBodyRejected++
+		}
 		if ($action.Name -eq "ContentFiltering" -and $action.Decision -notcontains "Pass")
 		{
 		    $onBodyRejected++
@@ -146,10 +151,9 @@ $topLocal["Sender"] = @{}
 $topLocal["Recipient"] = @{}
 
 foreach ($addr in ($messageTracks.Addresses)) {
-	if($addr.AddressType -ne "HeaderFrom"){
+	if(($addr.AddressType -like "Sender") -OR ($addr.AddressType -like "Recipient")){
 		$topLocal[[string]$addr.AddressType][$addr.Address]++
 	}
-    
 }
 
 $topRecipientsOutgoing = ($topLocal["Recipient"].GetEnumerator() | ?{$_.Name -notin $excludeFromTopAddresses} | Sort Value -Descending | select -First $TopAddressesCount)
@@ -166,7 +170,9 @@ $topExternal["Sender"] = @{}
 $topExternal["Recipient"] = @{}
 
 foreach ($addr in $messageTracks.Addresses) {
-    $topExternal[[string]$addr.AddressType][$addr.Address]++
+	if(($addr.AddressType -like "Sender") -OR ($addr.AddressType -like "Recipient")){
+		$topExternal[[string]$addr.AddressType][$addr.Address]++
+	}
 }
 
 $topRecipientsIncoming = ($topExternal["Recipient"].GetEnumerator() | ?{$_.Name -notin $excludeFromTopAddresses} | Sort Value -Descending | select -First $TopAddressesCount)
@@ -288,12 +294,11 @@ Send-MailMessage -SmtpServer $SmtpHost -From $ReportSender -To $ReportRecipient 
 Write-Host "Doing some cleanup.."
 Remove-Item $reportFileName
 Write-Host "Done."
-
 # SIG # Begin signature block
 # MIIbigYJKoZIhvcNAQcCoIIbezCCG3cCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU0qam3UYzH3NKvc9JkgAJCHEm
-# LdygghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUckLOLFuvUawr/V9Pj0mc/VXc
+# aFGgghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -419,22 +424,22 @@ Write-Host "Done."
 # LXNhMTAwLgYDVQQDEydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2
 # IC0gRzMCDF8qMMA1ngrijFda+DAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEK
 # MAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3
-# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU4v55NqU8T8SVtI9G
-# v/jnmOp/Rx0wDQYJKoZIhvcNAQEBBQAEggEAd0X+R1VESEJVS/gFGiEjCTQeCTxM
-# h1ODNk2RFX3so/xNvA5GF65kVdY/wtD+qFbV4wHBc8i/QLbv37fleGZpcwV/SHWX
-# GgFuQ2Fl+PmZAVUUSIehHsNkjRaPNynrO3BDwCvvisXQfFzRO3EZHCWHw7LidR5N
-# wzXX3Amo1q7kRxso66a6BvcARpcL4CcABEeWkITcOhyOmAoUt7pU7cvaKc/c2ozS
-# aqrwJY0EfMCGE+wI8L15bP+O9P3UydSGRboIVQbHNGNUhTC/m6JpsuGrs8XqKCsX
-# wpCQwAVxvNhnD5MrWOfQpaeGLY+bVbcv46CZmC8Y5yOcqfQglpjDZfcXHKGCAg8w
+# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU6R/5wm+euUVScZPz
+# bKja0YkaqAYwDQYJKoZIhvcNAQEBBQAEggEAlT3PkeL/42rGH04xAzbWB3b3VF00
+# 0HdM62qWyqrHg8k/OLH47Ey2tcbgW256dy2eHebnwd4x1SWWZjxxxKTdn04nP6No
+# 9F7SBPR3x9otZp2N1w/VZcHTWMc0daZCdItZvF/lUt5TR+Sb2liQNyRe7WMxo6nV
+# dco0DqEdbw466pO6ac8lvXSc+Ks7TPttngrGJhgFnFbcAkHipV/aILt7dLo0/Mse
+# qsivNVEWRrMbOz5ZjjLblIODIp3DLwlstMlihak3oo0IlaiFkLgjBhugWhl830FC
+# SbfbmoKTT5prA86lZvQV68SWdXed3QJRGN7YiRYj5lEzWI1j1+JmPIgtZqGCAg8w
 # ggILBgkqhkiG9w0BCQYxggH8MIIB+AIBATB2MGIxCzAJBgNVBAYTAlVTMRUwEwYD
 # VQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xITAf
 # BgNVBAMTGERpZ2lDZXJ0IEFzc3VyZWQgSUQgQ0EtMQIQAwGaAjr/WLFr1tXq5hfw
 # ZjAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-# 9w0BCQUxDxcNMTkwNzE5MTMyNTUwWjAjBgkqhkiG9w0BCQQxFgQUb1D7AN1LT1PN
-# tKbStkHgNVJPexowDQYJKoZIhvcNAQEBBQAEggEAI6b3x6Ql5Cltp6H7Hz6szBMT
-# f7nXkNFTGAbxruGrnmdLf4YpCFLu4cEHMK025y3kgpp5D/RjouRkmshaxudYGw2l
-# L6SVb8us+8sEq97UmcCMQLabyDuNR7DgSdLa1RpIt6CaXS7GRzYcdp1BH1yhmszu
-# d1hQ5LqKfHlGl8AOQMCbH65Drdm/Z8YZ65qfplxp4yoK9C6h89XY7h+PzVLo+5tQ
-# ViE58a5nUFD23POPnm/t1ECkq3eaSwDgcyhYXKEVZIHc4Yj6DFbOn2Zjt+IgM0Go
-# JTqZfUk0UIeByGczpMubaCqicHbYk0+vp7idoiWNxAZmtrOBRuvYPcNibQz8Rg==
+# 9w0BCQUxDxcNMTkwOTE2MTM0NjQwWjAjBgkqhkiG9w0BCQQxFgQU7ID/71yoeTlU
+# BAS86rOANpT4BlcwDQYJKoZIhvcNAQEBBQAEggEAFwvNP4V9tWM6McuDKbGxPL/B
+# d2DW1zoshMGvRQM+7su5QrGf9j7zrgZDFOA5vZSIfTY0uOCN6Z9silCOq21cZXo0
+# 3f6GhUebdh6XhbJ73/tzMDP2ePnezqNu5JJ3i/m3ZPaXkPyfCSO5olsj8/cx0orF
+# 3br2cqiKvMARNhod96qG2oZqDo5PRGWAv0eB4S5T7Wq/BLjDKAQhfl5ctVnPDqie
+# 7+9rK2El3gZxBDWUhaOITjDSMRiwpMJuKwpTHYMi942mIkpb5BEQtXi9BST4xROA
+# Ey+ZDyHPP2FbaaT6T4YCJBVn4RITAwWig8sB7w1e/HNqfZfClkm/59nn6XcXeg==
 # SIG # End signature block
