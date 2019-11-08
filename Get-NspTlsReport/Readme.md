@@ -40,7 +40,7 @@ Get-NspTlsReport -NoTime [-Status <string>] [-NspRule <string>] [-NoMail] [-Repo
   Specifies the start date for the E-Mail filter.  
   Please use ISO 8601 date format: "YYYY-MM-DD hh:mm:ss"  
   E.g.:  
-  	"2019.06-05 08:00:00"  
+  	"2019-06-05 08:00:00"  
 	
 ### NoMail
 Does not generate an E-Mail and saves the generated reports to the current execution location.  
