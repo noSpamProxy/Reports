@@ -69,6 +69,10 @@ Sets a custom SQL instance name which should be accessed. The required instance 
 **Default:** (local)  
 Sets a custom SQL server which must contains the instance and the database of the intranet-role.
 
+### WithEncryptionDetails
+Enables a detailed report for the encryption module.
+The output will be splittet into SMIME/PGP encryption and decryption and PDF Encryption.
+
 ## Outputs
 Report is temporary stored under %TEMP% if the report is send via by E-Mail.
 If the parameter <NoMail> is used the files will be saved at the current location of the executing user.
@@ -101,11 +105,10 @@ Generates a user-based and a domain-based report which are saved at the current 
 
 ### Example 4
 ```ps
-Get-NspLicenseReport.ps1 -NoMail -SqlServer sql.example.com -SqlInstance NSPIntranetRole -SqlDatabase NSPIntranet
+Get-NspLicenseReport.ps1 -NoMail -SqlServer sql.example.com -SqlInstance NSPIntranetRole -SqlDatabase NSPIntranet -SqlCredential $Credentials
 ```
-This generates a user-based report.  
-Therefore the script connects to the SQL Server "sql.example.com" and accesses the SQL instance "NSPIntranetRole" which contains the "NSPIntranet" database.
-
+This generates a user-based report. Therefore the script connects to the SQL Server "sql.example.com" and accesses the SQL instance "NSPIntranetRole" which contains the "NSPIntranet" database.
+The passed varaible "$Credentials" contains the desired user credentials. (e.x. $Credentials = Get-Credentials)
 ### Example 5
 ```ps
 Get-NspLicenseReport.ps1 -NoMail -SqlInstance ""
