@@ -32,7 +32,7 @@ Send-BlockReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-
   Specifies the start date for the E-Mail filter.  
   Please use ISO 8601 date format: "YYYY-MM-DD hh:mm:ss"  
   E.g.:  
-  	"2019.06-05 08:00:00"  
+  	"2019-06-05 08:00" or "2019-06-05 20:00:00:00"
 
 ### MailRecipientCSV
 Set a file path to an CSV file containing a list of original E-Mail recipient to filter for. Be aware about the needed CSV format, please watch the provided example.  	
@@ -92,7 +92,7 @@ Optional if you like to use a timespan.
 Specifies the end date for the E-Mail filter.  
 Please use ISO 8601 date format: "YYYY-MM-DD hh:mm:ss"  
 E.g.:  
-  "2019.06-05 08:00:00"
+  "2019-06-05 08:00" or "2019-06-05 20:00:00"
 	
 ## Outputs
 Report is stored under %TEMP% if the report is send via E-Mail the file will be removed.
