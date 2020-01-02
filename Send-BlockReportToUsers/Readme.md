@@ -166,3 +166,21 @@ E.g: email-report.csv
 User,Email  
 user1,user1@example.com  
 user2,user2@example.com  
+
+### EXAMPLE 8
+```ps
+Send-BlockReportToUsers.ps1 -NoTime -AdServer ad.example.com -AdBaseDN "DC=example,DC=com" -AdReportGroup "MyReportGroup"
+```
+Connect to AD as anonymous.
+
+### EXAMPLE 9
+```ps
+Send-BlockReportToUsers.ps1 -NoTime -AdServer ad.example.com -AdBaseDN "DC=example,DC=com" -AdReportGroup "MyReportGroup" -AdUsername Administrator
+```
+Connect to AD as Administrator, password needs to be set using .\Send-BlockReportToUsers.ps1 -SetAdPassword
+
+### EXAMPLE 10
+```ps
+Send-BlockReportToUsers.ps1 -SetAdPassword
+```
+Will wait for a user input. The input is shown in plain text!
