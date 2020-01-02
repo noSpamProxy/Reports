@@ -1,4 +1,4 @@
-# Send-EncryptionReportToUsers.ps1.ps1
+# Send-EncryptionReportToUsers.ps1
 
 This script can be used to generate a report about outbound E-Mails and shows if they where encrypted or not.
 It is possible to filter the results for a specific time duration and sends the report only to specific or all affected users.
@@ -12,19 +12,19 @@ The output contains the following information:
 
 ## Usage 
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -FromDate <String> [-ToDate <String>] [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-EncryptionReportToUsers.ps1 -FromDate <String> [-ToDate <String>] [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NoTime [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-EncryptionReportToUsers.ps1 -NoTime [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NumberOfDaysToReport <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-EncryptionReportToUsers.ps1 -NumberOfDaysToReport <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NumberOfHoursToReport <Int32> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-EncryptionReportToUsers.ps1 -NumberOfHoursToReport <Int32> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -ReportInterval <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-EncryptionReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 
 ## Parameters
@@ -124,42 +124,42 @@ Report is stored under %TEMP% if the report is send via E-Mail the file will be 
 ## Examples
 ### Example 1
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NoTime -ReportFileName "Example-Report" -ReportRecipient alice@example.com -ReportSender "NoSpamProxy Report Sender \<nospamproxy@example.com>" -ReportSubject "Example Report" -SmtpHost mail.example.com
+Send-EncryptionReportToUsers.ps1 -NoTime -ReportFileName "Example-Report" -ReportRecipient alice@example.com -ReportSender "NoSpamProxy Report Sender \<nospamproxy@example.com>" -ReportSubject "Example Report" -SmtpHost mail.example.com
 ```
 
 ### EXAMPLE 2
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -FromDate: "2019-06-05 08:00:00" -ToDate: "2019-06-05 20:00:00" 
+Send-EncryptionReportToUsers.ps1 -FromDate: "2019-06-05 08:00:00" -ToDate: "2019-06-05 20:00:00" 
 ```
 It is mandatory to specify \<FromDate>. Instead \<ToDate> is optional.  
 These parameters can be combined with all other parameters except \<NumberOfDaysToReport>, \<NumberOfHoursToRepor>, \<ReportIntervall> and \<NoTime>.
 
 ### EXAMPLE 3
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NumberOfDaysToReport 7 
+Send-EncryptionReportToUsers.ps1 -NumberOfDaysToReport 7 
 ```
 You can combine \<NumberOfDaysToReport> with all other parameters except \<FromDate>, \<ToDate>, \<NumberOfHoursToRepor>, \<ReportIntervall> and \<NoTime>.
   
 ### EXAMPLE 4
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NumberOfHoursToReport 12
+Send-EncryptionReportToUsers.ps1 -NumberOfHoursToReport 12
 ```
 You can combine \<NumberOfHoursToReport> with all other parameters except \<FromDate>, \<ToDate>, \<NumberOfDaysToReport>, \<ReportIntervall> and \<NoTime>.
 	
 ### EXAMPLE 5
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -ReportInterval weekly
+Send-EncryptionReportToUsers.ps1 -ReportInterval weekly
 ```
 You can combine \<ReportInterval> with all other parameters except \<FromDate>, \<ToDate>, \<NumberOfDaysToReport>, \<NumberOfHoursToReport>, \<ReportIntervall> and \<NoTime>.
   
 ### EXAMPLE 6
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NoTime -NspRule "All other inbound mails"
+Send-EncryptionReportToUsers.ps1 -NoTime -NspRule "All other inbound mails"
 ```
 
 ### EXAMPLE 7
 ```ps
-Send-EncryptionReportToUsers.ps1.ps1 -NoTime -SmtpHost mail.example.com -ReportRecipientCSV "C:\Users\example\Documents\email-report.csv"
+Send-EncryptionReportToUsers.ps1 -NoTime -SmtpHost mail.example.com -ReportRecipientCSV "C:\Users\example\Documents\email-report.csv"
 ```
 The CSV have to contain the header "Email" else the mail addresses cannot be read from the file.  
 It is possible to combine \<ReportRecipientCSV> with \<ReportRecipient>.  
