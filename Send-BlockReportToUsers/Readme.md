@@ -27,6 +27,24 @@ Send-BlockReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-
 ```
 
 ## Parameters
+### AdBaseDn
+  Define the BaseDN for searching a user group in the defined AD.
+
+### AdPort
+  Default: 389
+  Define a custom port to access the AD.
+
+### AdReportGroup
+  Define the AD user group to search for.
+  The users in this group will receive a report.
+
+### AdServer
+  Define the hostname, FQDN or IP address of the desired AD.
+
+### AdUsername
+  Define an optional username to authenticate against the AD.
+  A password have to be set before using <SetAdPassword>.
+
 ### FromDate
   Mandatory if you like to use a timespan.  
   Specifies the start date for the E-Mail filter.  
