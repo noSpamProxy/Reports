@@ -14,8 +14,7 @@
   Specifies the start date for the E-Mail filter.
   Please use ISO 8601 date format: "YYYY-MM-DD hh:mm:ss"  
   E.g.:
-  	"2018-11-16 08:00" or "2018-11-16 20:00"
-  	"2018-11-16 8am" or "2018-11-16 8pm"
+  	"2018-11-16 08:00" or "2018-11-16 20:00:00"
 
 .PARAMETER NoTime
   Mandatory if you do not like to specify a time value in any kind of way.
@@ -73,17 +72,16 @@
   Specifies the end date for the E-Mail filter.
   Please use ISO 8601 date format: "YYYY-MM-DD hh:mm:ss"  
   E.g.:
-  	"2018-11-16 08:00" or "2018-11-16 20:00"
-  	"2018-11-16 8am" or "2018-11-16 8pm"
+  	"2018-11-16 08:00" or "2018-11-16 20:00:00"
 
 .OUTPUTS
   Report is stored under %TEMP%\TLSReport.html unless a custom <ReportFileName> parameter is given.
 
 .NOTES
-  Version:        1.0.2
+  Version:        1.0.3
   Author:         Jan Jaeschke
-  Creation Date:  2019-07-02
-  Purpose/Change: edit pre comments
+  Creation Date:  2020-01-02
+  Purpose/Change: added validation pattern for FromDate and ToDate parameters
   
 .LINK
   https://https://www.nospamproxy.de
@@ -124,9 +122,9 @@
 param (
 # userParams are used for filtering
 	# set start date for filtering
-	[Parameter(Mandatory=$true, ParameterSetName="dateSpanSet")][string] $FromDate,
+	[Parameter(Mandatory=$true, ParameterSetName="dateSpanSet")][ValidatePattern("^([0-9]{4})-?(1[0-2]|0[1-9])-?(3[01]|0[1-9]|[12][0-9])\s(2[0-3]|[01][0-9]):?([0-5][0-9]):?([0-5][0-9])?$")][string] $FromDate,
 	# set end date for filtering
-	[Parameter(Mandatory=$false, ParameterSetName="dateSpanSet")][string] $ToDate,
+	[Parameter(Mandatory=$false, ParameterSetName="dateSpanSet")][ValidatePattern("^([0-9]{4})-?(1[0-2]|0[1-9])-?(3[01]|0[1-9]|[12][0-9])\s(2[0-3]|[01][0-9]):?([0-5][0-9]):?([0-5][0-9])?$")][string] $ToDate,
 	# set number of days for filtering
 	[Parameter(Mandatory=$true, ParameterSetName="numberOfDaysSet")][ValidatePattern("[0-9]+")][string] $NumberOfDaysToReport,
 	# set number of hours for filtering
@@ -348,8 +346,8 @@ Write-Host "Skript durchgelaufen"
 # SIG # Begin signature block
 # MIIbigYJKoZIhvcNAQcCoIIbezCCG3cCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUTTdGoNiBrMmiKwXAFSbnwpR6
-# yLagghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUa4SuvmAskUe73K3IkQbsgVec
+# mmugghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -475,22 +473,22 @@ Write-Host "Skript durchgelaufen"
 # LXNhMTAwLgYDVQQDEydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2
 # IC0gRzMCDF8qMMA1ngrijFda+DAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEK
 # MAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3
-# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUJN5RKO2tydiKERXn
-# 3MVUCK3jp7cwDQYJKoZIhvcNAQEBBQAEggEAQKI86yieIg/xH6qr10QkoR4S96ZT
-# 3g1VUYivpc5L65ROy3qmRgFVVrmsHprniUcejpIeXj4TmftA7GspazJ3dfYUvwVE
-# HftHX+2kl8fJyuj6llGVnaPohKRQEqiZL6EnqaKJjke76lXCJZKEnVBOgpVWucmB
-# yrTzTp1xyz4B3fxk9WGy8Guxw9NPm/NXe33CHgzUI7EVPYVeKtiIF425651ZFB+k
-# TtmLmAaEstrrO/hbnFEr1Nu/+WEtsSWP3k7Fl5Vk/FTzedb4j5eIUrh1G5qAclcg
-# UeN3ozTFYHtJs3CrMK/dInWAdZeUaD5vYPBXjEBn4R2tLRP6sOI+2gFgYqGCAg8w
+# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUiUi9N6BhRaRFkZ4D
+# AANwmcQzcqswDQYJKoZIhvcNAQEBBQAEggEAQ/eBcSESGKagvhtqYFVDKGgVhovH
+# cKpINrjqOtXXLMryRiOtlAtSUUSirNaGsb4A9h581+W2A/OYKVwKorBcgPuJ78n3
+# QKYehluol4y1fA0R6p3k+V0Tdd8QBU/1nV7eZboXRqF4u6ny7/qW9JpYBp8C6voA
+# OWEvJQQOEh4pelJDeHOtxg9UAt4PXbLorFOEnkiOjX0JwAImTFVow5wldOC+ApKR
+# BrB4WcyLBo1Y3wDkzcLQhCUVgFArbwhzxdKODGafPZUIwLbBcEtE/tMV4B6mZb7Z
+# ED+KlnVAvM527uILxQzwobf/yigmQVGbBtvMXVNe1BnXRSJxF3ObHOTzvqGCAg8w
 # ggILBgkqhkiG9w0BCQYxggH8MIIB+AIBATB2MGIxCzAJBgNVBAYTAlVTMRUwEwYD
 # VQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xITAf
 # BgNVBAMTGERpZ2lDZXJ0IEFzc3VyZWQgSUQgQ0EtMQIQAwGaAjr/WLFr1tXq5hfw
 # ZjAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-# 9w0BCQUxDxcNMTkwNzAyMDcxMTU5WjAjBgkqhkiG9w0BCQQxFgQUZE8V5jU+yHiM
-# m7HRhK3k8H/y7FQwDQYJKoZIhvcNAQEBBQAEggEAbgiQXd0KB0mbU4OaEIXxf/Bm
-# RekECfXnVc0gOQPY6kDjeH79pWrIGBQwYmg2PQrtuc0rSMLK8ayuPgikKuTxJvTi
-# GLuvOaCaq7bjXFY/Wlblh3p/RP2rGeQ1Wi0SwN51UATIDW9PeBi6OcHc+68pF8T9
-# 62J0+yPumpHre6dznd/hpTV+SUPRMZd9Gob2ysGiW4dPaYouq77RVPuTOdJRrmvw
-# GplBCjARdRqnSlK3PWTT+wUHPqBHlMIiBEtJidt0+uONXoTTnYlBZMH7B5wj9/dS
-# xOmliKxJhb2VZQHvUUyxq3CbcKzBy5zrbKrsM8urAGkjOZ+SjGQ9zZk0gZmGlw==
+# 9w0BCQUxDxcNMjAwMTAyMTMyODA5WjAjBgkqhkiG9w0BCQQxFgQUh+rYk7145WxN
+# +EnCxkAWHNGb8wIwDQYJKoZIhvcNAQEBBQAEggEAIdGX4ZYxlvjHRfj8TJY5Sq4a
+# m3rjW18NNpw5TBhFYk9BW2GJEGoMZzA0IeZA0pW9dfAr+icziUhkHJ0ZnHa7q7bd
+# zroYUniB46/RRxesi98VjjcBG14qGMkeKtepmGqweWISC7vfv2za9Q1Id7CKxJyc
+# 2+jPxJSub7B616KTH/k4fLHgMtGG8/QLMUxN4fUkY8dqchSP7ON1h0iWA8JBqa0f
+# iv1neCRINhVy2IpycpmsHtDvUJTFVchjhmqmE0ahhVWMlMKn/gvnGdEBf2BZ3hd8
+# vnpP/uz8NsoQt2mazS7iHVAxNrxm/cMw7p6KIFyBoiCwFWUNwZgT9gxuGtpSBQ==
 # SIG # End signature block
