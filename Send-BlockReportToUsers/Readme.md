@@ -100,6 +100,10 @@ Sets the report E-Mail sender address.
 ### ReportSubject
 **Default:** Auswertung der abgewiesenen E-Mails an Sie     
 Sets the report E-Mail subject.
+
+### SetAdPassword
+  Set a password to use for authentication against the AD.
+  The password will be saved as encrypted "NspAdReportingPass.bin" file under %APPDATA%.
 	
 ### SmtpHost
 Specifies the SMTP host which should be used to send the report E-Mail.  
