@@ -2,6 +2,10 @@
 
 This repository contains PowerShell Scripts to create advanced reports about your NoSpamProxy installation.
 
+## [Check-NspCertificates](https://github.com/noSpamProxy/Reports/tree/master/Check-NspCertificates)
+
+Check a certificate and its chain by thumbprint.
+
 ## Get-RejectionReport
 
 This report displays information about all rejected e-mails and which filters and actions were involved. Use this version for NoSpamProxy 12.x and higher.
