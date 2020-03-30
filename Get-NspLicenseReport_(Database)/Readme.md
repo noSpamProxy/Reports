@@ -16,6 +16,12 @@ Get-NspLicenseReport.ps1 [-NoMail] [[-ReportFileName] <String>] [[-ReportRecipie
 ```
 
 ## Parameters
+### GDPR
+Generates a report with hashed names and e-mail addresses.
+
+### Minimal
+The output file will only contain the numeric number of used licenses.
+
 ### NoMail
 Does not generate an E-Mail and saves the generated reports to the current execution location.  
 Ideal for testing or manual script usage.
