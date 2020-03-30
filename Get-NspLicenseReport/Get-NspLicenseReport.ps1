@@ -42,7 +42,9 @@ foreach ($user in $features){
 		$sandboxarray+=$user.DisplayName + " - " + $user.FilesUploadedToSandbox + " Uploaded File(s)";
 	}	
 }
-$stream = [System.IO.StreamWriter] $ExportFilePath
+# the $false prevents UTF8 with BOM
+$encoding = New-Object System.Text.UTF8Encoding $false
+$stream = New-Object System.IO.StreamWriter $ExportFilePath, $false, $encoding
 $stream.WriteLine("Feature-Usage:")
 $stream.Write("`r`n")
 $stream.WriteLine("Protection: " + $protcounter + " User")
@@ -73,8 +75,8 @@ Write-Host "Eror: PowerShell version is to old. Please Update PowrShell to versi
 # SIG # Begin signature block
 # MIIbigYJKoZIhvcNAQcCoIIbezCCG3cCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUyO1J4YEqYn1RiFaxBCgZfG0B
-# GTGgghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUqWTiwDrY5LqFaNELvwNZjYms
+# q+egghbWMIIElDCCA3ygAwIBAgIOSBtqBybS6D8mAtSCWs0wDQYJKoZIhvcNAQEL
 # BQAwTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoT
 # Ckdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wHhcNMTYwNjE1MDAwMDAw
 # WhcNMjQwNjE1MDAwMDAwWjBaMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFs
@@ -200,22 +202,22 @@ Write-Host "Eror: PowerShell version is to old. Please Update PowrShell to versi
 # LXNhMTAwLgYDVQQDEydHbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gU0hBMjU2
 # IC0gRzMCDF8qMMA1ngrijFda+DAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEK
 # MAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3
-# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU9zdz5W+f2c8CfvMj
-# jiEEsw4boqUwDQYJKoZIhvcNAQEBBQAEggEAEQ+FM6BT+guymfRht4zNgITZNJxJ
-# ZYgWL8lMn4bXfmsqQL7PbZEMVnu2tDRgHMtBciV9MOJGgi01CThlF0SO4OvegXIQ
-# 75wN1vnGB0dvusm6mUamTG/bpeRSbuZ/zreb1bdPeN2Bd0SoxZwKq7zzDM7RrwXS
-# ILWaUUVvRVEpdCt9E2F0afrTxVldkQz/4NGKKoHYZPbWoJAjpZRq51JS2d/b1Onj
-# PFi4YhohIp6F3/vr12M+IeW6n3IMS8BUj0hYf3amH2oMuZNt1xOZU3s4iHLVg/RC
-# /Ja379DpfwB5DhnDu8BM5WDo15WulBtLLqjYO9IIsIrGnGnITDZxQw1aqqGCAg8w
+# AgELMQ4wDAYKKwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUBfhBd1fkyKpy5WBf
+# F7c55YDiQBMwDQYJKoZIhvcNAQEBBQAEggEAVVYCXsknQh8YeU5BN+iEQt66WMz0
+# jgmxjNVRepm6idKtaSDJYOwu4g/Cbig8cQ+NJy8tUqQuc/26QFpoylbBh/C8h4BO
+# XgRbkBRGn1ocAQv5ZuGOHBApufn1CjKVdIGOd7nDF8qIn49u5tjIVsMHUTqJnc8y
+# siLwXn0H3ItGPKeuYIi5As8TDY7nDnyi4tD65d77+1mipXhziQJlcTW6NdXc76Ao
+# 0y9gj+/R6xXzUqphtIInNJwKhrWBDzhYmvOHc09pvhg4lGJisHk+GLtaXWHesJf7
+# +oPOrzlz0q+aesFaRX6c6k9NX7s+CwtNQZHdDPB/xs1U2xvR3AJw0Xhps6GCAg8w
 # ggILBgkqhkiG9w0BCQYxggH8MIIB+AIBATB2MGIxCzAJBgNVBAYTAlVTMRUwEwYD
 # VQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xITAf
 # BgNVBAMTGERpZ2lDZXJ0IEFzc3VyZWQgSUQgQ0EtMQIQAwGaAjr/WLFr1tXq5hfw
 # ZjAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-# 9w0BCQUxDxcNMjAwMzMwMTEyNDA1WjAjBgkqhkiG9w0BCQQxFgQUH6aSHA+9xfAa
-# oBfFJBWD4F8g4YYwDQYJKoZIhvcNAQEBBQAEggEAc1r9rw1kc7q+HHHg4TFZg/Vj
-# IU70fk9uuPxzSU3qazW1vyUz+vzaMgXxM+up8abY0K50aveenM39anwiQNHY8vmV
-# bVXJqTiiHGoB5EZQC139nkxQk7I0sz2AfzB9qT54gMDNCAcRirhx+NapuXSnLEuN
-# 5gozurCYpfWZu+Ieqke/4oTg3nVKBM5wFcGDPSGZji0OcBEuvz+Q4pSZJ8h3J6A+
-# K9vKwxNUxiwmUz8EZkuM5F0kcKfAJU+qn8YuB8TLdX0P9wOXHCrgLNknsS7wXe9u
-# pxQti1yE3kWhlH7ZQEHz+b080oZHyDI7lnatJFjbDqtDaJQRgyBhYAFDZ6kudA==
+# 9w0BCQUxDxcNMjAwMzMwMTE0MDQ0WjAjBgkqhkiG9w0BCQQxFgQUCpmJrQyiZ9G/
+# +0N2NiLOMEKLAtMwDQYJKoZIhvcNAQEBBQAEggEANDT1ZRxLl4m6o4vhB/AFSsal
+# 4RHci7lYZJgHW1hd83BBbxa9JIf2cYdhfTfOFmF/pZFTDPKrHYD+fRSURKGlwqWp
+# PljYtyQpHKImlkZ8aewWmvKfp4DirtI16CAhG4lXa0NExcyk/Js7Vnk2hJB82/xG
+# PP8zjVvB9Vv7L1cTED+WBJZfRmzVvOQIAF8ojBLzG8sIlhUTyMb4HgHaMEVcRUv7
+# zpUBcyQnQbT+xEMV+BOq7t2PReh84FVY5/IfGFi35Vk1ug4ab33cdNxriTR2F8wg
+# jvLk+Tye5G2vBZEySKnC9lx2xiLCc3q1LN3MeMEzoYVjphD+i7ezjvGUygDMzg==
 # SIG # End signature block
