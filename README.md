@@ -47,7 +47,7 @@ Currently, there are two versions of this script:
 * [NoSpamProxy 12.2 and later](Get-DMARCReport)
 * [NoSpamProxy 11.x](11.x/Get-DMARCReport)
 
-## [Get-EncryptionReport](https://github.com/noSpamProxy/Reports/tree/master/Get-EncrxyptionReport)
+## [Get-EncryptionReport](https://github.com/noSpamProxy/Reports/tree/master/Get-EncryptionReport)
 
 This script generates a report over the count of encrypted and non encrypted mails.
 
