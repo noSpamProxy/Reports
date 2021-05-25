@@ -47,6 +47,10 @@ Currently, there are two versions of this script:
 * [NoSpamProxy 12.2 and later](Get-DMARCReport)
 * [NoSpamProxy 11.x](11.x/Get-DMARCReport)
 
+## [Get-EncryptionReport](https://github.com/noSpamProxy/Reports/tree/master/Get-EncrxyptionReport)
+
+This script generates a report over the count of encrypted and non encrypted mails.
+
 ## [Get-ExpiredTLSCertificates](https://github.com/noSpamProxy/Reports/tree/master/get-expiredTLSCertificates)
 
 This report displays all expired certificates from e-mail servers that NoSpamProxy has sent outbound e-mails to.
