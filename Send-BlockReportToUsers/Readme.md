@@ -11,19 +11,19 @@ The output contains the following information:
 
 ## Usage 
 ```ps
-Send-BlockReportToUsers.ps1 -FromDate <String> [-ToDate <String>] [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers.ps1 -FromDate <String> [-ToDate <String>] [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -NoTime [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers.ps1 -NoTime [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -NumberOfDaysToReport <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers.ps1 -NumberOfDaysToReport <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -NumberOfHoursToReport <Int32> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers.ps1 -NumberOfHoursToReport <Int32> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
 ```
 
 ## Parameters
@@ -44,6 +44,11 @@ Send-BlockReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-
 ### AdUsername
   Define an optional username to authenticate against the AD.
   A password have to be set before using <SetAdPassword>.
+
+### CheckUserExistence
+  The switch allows to check each report recipient against the known NoSpamProxy users.  
+  Only usable if no recipient list is provided.  
+  Can have a huge performance impact.  
 
 ### FromDate
   Mandatory if you like to use a timespan.  
