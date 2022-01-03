@@ -3,7 +3,7 @@ WITH Query AS (
 		s.Domain,
 		COALESCE (u.Displayname, s.Address) AS DisplayName, 
 			CASE WHEN SUM(s.MailsSent) = 0 THEN 0 ELSE 1 END AS Protection,
-			CASE WHEN SUM((s.SMimeMailsSigned + s.SMimeMailsEncrypted + s.PgpMailsSigned + s.PgpMailsEncrypted + s.PdfMailsSent + s.SMimeMailsValidated + s.SMimeMailsDecrypted)) = 0 THEN 0 ELSE 1 END AS [Encryption], 
+			CASE WHEN SUM((s.SMimeMailsSigned + s.SMimeMailsEncrypted + s.SMimeMailsDecrypted + s.SMimeMailsValidated + s.PgpMailsSigned + s.PgpMailsEncrypted + s.PgpMailsDecrypted + s.PgpMailsValidated + s.PdfMailsSent)) = 0 THEN 0 ELSE 1 END AS [Encryption], 
             CASE WHEN SUM(s.MailsWithDisclaimer) = 0 THEN 0 ELSE 1 END AS Disclaimer, 
 			CASE WHEN SUM(s.MailsWithLargeFiles) = 0 THEN 0 ELSE 1 END AS LargeFiles, 
 			CASE WHEN SUM(s.PdfMailsSent) = 0 THEN 0 ELSE 1 END AS PdfMailsSent, 
@@ -13,6 +13,8 @@ WITH Query AS (
 			CASE WHEN SUM(s.SMimeMailsDecrypted) = 0 THEN 0 ELSE 1 END AS SMimeMailsDecrypted, 
 			CASE WHEN SUM(s.PgpMailsSigned) = 0 THEN 0 ELSE 1 END AS PgpMailsSigned, 
 			CASE WHEN SUM(s.PgpMailsEncrypted) = 0 THEN 0 ELSE 1 END AS PgpMailsEncrypted, 
+			CASE WHEN SUM(s.PgpMailsValidated) = 0 THEN 0 ELSE 1 END AS PgpMailsValidated, 
+			CASE WHEN SUM(s.PgpMailsDecrypted) = 0 THEN 0 ELSE 1 END AS PgpMailsDecrypted, 
 			SUM(CASE WHEN DATEDIFF(d, s.Date,GetDate()) > 30 THEN 0 ELSE s.FilesUploadedToSandbox END) AS FilesUploadedToSandbox
 	FROM MessageTracking.UserAndDomainStatistic AS s 
 		LEFT OUTER JOIN	Usermanagement.MailAddress AS ma ON ma.MailAddress = s.Address 
@@ -34,7 +36,9 @@ SELECT
 	SMimeMailsValidated,
 	SMimeMailsDecrypted,
 	PgpMailsSigned,
-	PgpMailsEncrypted
+	PgpMailsEncrypted,
+	PgpMailsValidated,
+	PgpMailsDecrypted
 FROM Query
 WHERE (Protection <> 0) 
 	OR ([Encryption] <> 0) 
