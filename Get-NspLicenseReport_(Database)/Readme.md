@@ -8,6 +8,7 @@ It is possible to generate a user-based report which contains the following info
  - List of each user who used the module
  
 Moreover it is possible to generate a domain-based report which contains the same information like above but separated for each domain. 
+Be aware of the fact that a user with mulitple domains will be counted multiple times in the domain based report.
 
 ## Usage 
 
