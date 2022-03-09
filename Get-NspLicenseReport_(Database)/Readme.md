@@ -13,7 +13,7 @@ Be aware of the fact that a user with mulitple domains will be counted multiple 
 ## Usage 
 
 ```ps
-Get-NspLicenseReport.ps1 [-NoMail] [[-ReportFileName] <String>] [[-ReportRecipient] <String[]>] [[-ReportRecipientCSV] <String>][[-ReportSender] <String>] [[-ReportSubject] <String>] [[-ReportType] user-based | domain-based | both] [[-SmtpHost] <String>] [[-SqlCredential] <PSCredential>] [[-SqlDatabase] <String>] [[-SqlInstance]<String>] [[-SqlServer] <String>] [<CommonParameters>]
+Get-NspLicenseReport.ps1 [-NoMail] [[-ReportFileName] <String>] [[-ReportRecipient] <String[]>] [[-ReportRecipientCSV] <String>][[-ReportSender] <String>] [[-ReportSubject] <String>] [[-ReportType] user-based | domain-based | both] [[-SmtpHost] <String>] [[-SqlCredential] <PSCredential>] [[-SqlDatabase] <String>] [[-SqlInstance]<String>] [[-SqlServer] <String>] [[-TenantId] <Int32>] [<CommonParameters>]
 ```
 
 ## Parameters
@@ -76,6 +76,10 @@ Sets a custom SQL instance name which should be accessed. The required instance 
 **Default:** (local)  
 Sets a custom SQL server which must contains the instance and the database of the intranet-role.
 
+### TenantId
+**Default:** 0
+Provide the tenant for which a license report should be generated.
+
 ### WithEncryptionDetails
 Enables a detailed report for the encryption module.
 The output will be splittet into SMIME/PGP encryption and decryption and PDF Encryption.
@@ -122,3 +126,9 @@ Get-NspLicenseReport.ps1 -NoMail -SqlInstance ""
 ```
 Use the above instance name "" if you try to access the default SQL instance.  
 If there is a connection problem and the NSP configuration shows an empty instance for the intranet-role under "Configuration -> NoSpamProxy components" than this instance example should work.
+### Example 6
+```ps
+Get-NspLicenseReport.ps1 -NoMail -SqlInstance "" -TenantId 42
+```
+NoSpamProxy v14 provides a provider mode which allows the usage of multiple tenants.
+To generate a report for a specific tenant it is necessary to provide the desired tenant id.
