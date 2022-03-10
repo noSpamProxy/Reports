@@ -4,7 +4,7 @@ WITH Query AS (
 		s.Domain,
 		COALESCE (u.Displayname, s.Address) AS DisplayName, 
 			CASE WHEN SUM(s.MailsSent) = 0 THEN 0 ELSE 1 END AS Protection,
-			CASE WHEN SUM((s.SMimeMailsSigned + s.SMimeMailsEncrypted + s.SMimeMailsDecrypted + s.SMimeMailsValidated + s.PgpMailsSigned + s.PgpMailsEncrypted + s.PgpMailsDecrypted + s.PgpMailsValidated + s.PdfMailsSent)) = 0 THEN 0 ELSE 1 END AS [Encryption], 
+			CASE WHEN SUM((s.SMimeMailsSigned + s.SMimeMailsEncrypted + s.SMimeMailsDecrypted + s.PgpMailsSigned + s.PgpMailsEncrypted + s.PgpMailsDecrypted + s.PdfMailsSent)) = 0 THEN 0 ELSE 1 END AS [Encryption], 
             CASE WHEN SUM(s.MailsWithDisclaimer) = 0 THEN 0 ELSE 1 END AS Disclaimer, 
 			CASE WHEN SUM(s.MailsWithLargeFiles) = 0 THEN 0 ELSE 1 END AS LargeFiles, 
 			CASE WHEN SUM(s.PdfMailsSent) = 0 THEN 0 ELSE 1 END AS PdfMailsSent, 
