@@ -4,19 +4,19 @@ Create a Cyren Sandbox statistic for rejected emails.
 ## Usage 
 
 ```ps
-Get-NspSandboxStatistic.ps1 -FromDate <String> [-ToDate <String>] [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
+Get-NspSandboxStatistic\Get-NspSandboxStatistic.ps1 -FromDate <String> [-ToDate <String>] [-NspRule <String>] [-NoMail] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspSandboxStatistic.ps1 -NumberOfDaysToReport <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
+Get-NspSandboxStatistic\Get-NspSandboxStatistic.ps1 -NumberOfDaysToReport <String> [-NspRule <String>] [-NoMail] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspSandboxStatistic.ps1 -NumberOfHoursToReport <Int32> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
+Get-NspSandboxStatistic\Get-NspSandboxStatistic.ps1 -NumberOfHoursToReport <Int32> [-NspRule <String>] [-NoMail] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspSandboxStatistic.ps1 -ReportInterval <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
+Get-NspSandboxStatistic\Get-NspSandboxStatistic.ps1 -ReportInterval <String> [-NspRule <String>] [-NoMail] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspSandboxStatistic.ps1 -NoTime [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [<CommonParameters>]
+Get-NspSandboxStatistic\Get-NspSandboxStatistic.ps1 -NoTime [-NspRule <String>] [-NoMail] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 
 
@@ -78,6 +78,10 @@ Sets the report E-Mail subject.
 ### SmtpHost
 Specifies the SMTP host which should be used to send the report E-Mail.  
 It is possible to use a FQDN or IP address.
+
+### TenantPrimaryDomain
+Used to login into the desired NoSpamProxy tenant to run this script on.  
+Only required if NoSpamProxy v14 is used in provider mode.
 	
 ### ToDate
 Optional if you like to use a timespan.  
