@@ -1,14 +1,25 @@
 ﻿param (
-	[Parameter(Mandatory=$true)][string] $ExportFilePath
+	[Parameter(Mandatory=$true)][string] $ExportFilePath,
+	# only needed for v14 with enabled provider mode
+	[Parameter(Mandatory=$false)][string] $TenantPrimaryDomain
 )
 $minver = [Version]4.0.0;
 if ($PSVersionTable.PSVersion -gt $minver)
 {
 	$nspVersion = (Get-ItemProperty -Path HKLM:\SOFTWARE\NoSpamProxy\Components -ErrorAction SilentlyContinue).'Intranet Role'
 	if ($nspVersion -gt '14.0') {
-		# NSP v14 has a new authentication mechanism, Connect-Nsp is required to authenticate properly
-		# -IgnoreServerCertificateErrors allows the usage of self-signed certificates
-		Connect-Nsp -IgnoreServerCertificateErrors
+		if ($(Get-NspIsProviderModeEnabled) -eq $true) {
+			if ($null -eq $TenantPrimaryDomain -OR $TenantPrimaryDomain -eq "") {
+				Write-Host "Please provide a TenantPrimaryDomain to run this script with NoSpamProxy v14 in provider mode."
+				EXIT
+			} else {
+				# NSP v14 has a new authentication mechanism, Connect-Nsp is required to authenticate properly
+				# -IgnoreServerCertificateErrors allows the usage of self-signed certificates
+				Connect-Nsp -IgnoreServerCertificateErrors -PrimaryDomain $TenantPrimaryDomain
+			}
+		} else {
+			Connect-Nsp -IgnoreServerCertificateErrors
+		}
 	}
 $features = Get-nspfeatureusage;
 $protcounter = 0;
