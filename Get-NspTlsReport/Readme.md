@@ -18,19 +18,19 @@ The output can be changed by various filters, see parameters section.
 ## Usage 
 
 ```ps
-Get-NspTlsReport -FromDate <string> [-ToDate <string>] [-Status <string>] [-NspRule <string>] [-NoMail] [-ReportFileName <string>] [-ReportRecipient <string[]>] [-ReportRecipientCSV <string>] [-ReportSender <string>] [-ReportSubject <string>] [-SmtpHost <string>] [<CommonParameters>]
+Get-NspTlsReport.ps1 -FromDate <String> [-ToDate <String>] [-Status <String>] [-NspRule <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
-```ps
-Get-NspTlsReport -NumberOfDaysToReport <string> [-Status <string>] [-NspRule <string>] [-NoMail] [-ReportFileName <string>] [-ReportRecipient <string[]>] [-ReportRecipientCSV <string>] [-ReportSender <string>] [-ReportSubject <string>] [-SmtpHost <string>] [<CommonParameters>]
+```ps 
+Get-NspTlsReport.ps1 -NumberOfDaysToReport <String> [-Status <String>] [-NspRule <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
-```ps
-Get-NspTlsReport -NumberOfHoursToReport <int> [-Status <string>] [-NspRule <string>] [-NoMail] [-ReportFileName <string>] [-ReportRecipient <string[]>] [-ReportRecipientCSV <string>] [-ReportSender <string>] [-ReportSubject <string>] [-SmtpHost <string>] [<CommonParameters>]
+```ps 
+Get-NspTlsReport.ps1 -NumberOfHoursToReport <Int32> [-Status <String>] [-NspRule <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
-```ps
-Get-NspTlsReport -ReportInterval <string> [-Status <string>] [-NspRule <string>] [-NoMail] [-ReportFileName <string>] [-ReportRecipient <string[]>] [-ReportRecipientCSV <string>] [-ReportSender <string>] [-ReportSubject <string>] [-SmtpHost <string>] [<CommonParameters>]
+```ps 
+Get-NspTlsReport.ps1 -ReportInterval <String> [-Status <String>] [-NspRule <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
-```ps
-Get-NspTlsReport -NoTime [-Status <string>] [-NspRule <string>] [-NoMail] [-ReportFileName <string>] [-ReportRecipient <string[]>] [-ReportRecipientCSV <string>] [-ReportSender <string>] [-ReportSubject <string>] [-SmtpHost <string>] [<CommonParameters>]
+```ps 
+Get-NspTlsReport.ps1 -NoTime [-Status <String>] [-NspRule <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 
 
@@ -102,6 +102,9 @@ Specifies a filter to get only E-Mails which are matching the defined state.
 Possible values are:  
 None | Success | DispatcherError | TemporarilyBlocked | PermanentlyBlocked | PartialSuccess | DeliveryPending | Suppressed | DuplicateDrop | PutOnHold | All
 
+### TenantPrimaryDomain
+Used to login into the desired NoSpamProxy tenant to run this script on.  
+Only required if NoSpamProxy v14 is used in provider mode.
   
 ### ToDate
 Optional if you like to use a timespan.  
