@@ -13,11 +13,11 @@ Be aware of the fact that a user with mulitple domains will be counted multiple 
 ## Usage 
 
 ```ps
-Get-NspLicenseReport.ps1 [-NoMail] [[-ReportFileName] <String>] [[-ReportRecipient] <String[]>] [[-ReportRecipientCSV] <String>][[-ReportSender] <String>] [[-ReportSubject] <String>] [[-ReportType] user-based | domain-based | both] [[-SmtpHost] <String>] [[-SqlCredential] <PSCredential>] [[-SqlDatabase] <String>] [[-SqlInstance]<String>] [[-SqlServer] <String>] [[-TenantId] <Int32>] [<CommonParameters>]
+Get-NspLicenseReport.ps1 [-NoMail] [[-ReportFileName] <String>] [[-ReportRecipient] <String[]>] [[-ReportRecipientCSV] <String>] [[-ReportSender] <String>] [[-ReportSubject] <String>] [[-ReportType] <String>] [[-SmtpHost] <String>] [[-SqlCredential] <PSCredential>] [[-SqlUsername] <String>] [[-SqlPasswordFileLocation] <String>] [[-SqlDatabase] <String>] [[-SqlInstance] <String>] [[-SqlServer] <String>] [-WithEncryptionDetails] [-GDPRconform] [-Minimal] [[-TenantId] <Int32>] [-SetLoginPassword] [<CommonParameters>][-NoMail] [[-ReportFileName] <String>] [[-ReportRecipient] <String[]>] [[-ReportRecipientCSV] <String>][[-ReportSender] <String>] [[-ReportSubject] <String>] [[-ReportType] user-based | domain-based | both] [[-SmtpHost] <String>] [[-SqlCredential] <PSCredential>] [[-SqlDatabase] <String>] [[-SqlInstance]<String>] [[-SqlServer] <String>] [[-TenantId] <Int32>] [<CommonParameters>]
 ```
 
 ## Parameters
-### GDPR
+### GDPRconform
 Generates a report with hashed names and e-mail addresses.
 
 ### Minimal
@@ -56,6 +56,10 @@ Sets the report E-Mail subject.
 Sets the type of generated report.    
 Possible values are: user-based, domain-based, both
 
+### SetLoginPassword
+Starts an interactive mode to save an entered password into an machine encrypted file.
+Be aware that the input is displayed.
+
 ### SmtpHost
 Specifies the SMTP host which should be used to send the report E-Mail.  
 It is possible to use a FQDN or IP address.
@@ -72,9 +76,17 @@ Sets a custom SQl database name which should be accessed. The required database 
 **Default:** NoSpamProxy  
 Sets a custom SQL instance name which should be accessed. The required instance must contain the intranet-role database.
 
+### SqlPasswordFileLocation
+**Default:** "$PSScriptRoot\NspReadSqlPass.bin"
+Set the location of the password file. The default is resolved to the current script location.
+
 ### SqlServer
 **Default:** (local)  
 Sets a custom SQL server which must contains the instance and the database of the intranet-role.
+
+### SqlUsername
+Set a username which is used for the SQL login. 
+If this parameter is used an SQL password file needs to be provided or the password needs to be entered manually on runtime.
 
 ### TenantId
 **Default:** 0
