@@ -17,6 +17,7 @@ Send-ReporttoUserswithAllBlockedEmails -SMTPHost [-NumberOfDaysToReport] [-Repor
 - **NumberOfDaysToReport**: Optional. Specifies the Number of days to report. Default value is "1".
 - **ReportSender**: Optional. Specifies the Sender of the email. Default value is "NoSpamProxy Report Sender <nospamproxy@example.com>".
 - **ReportSubject**: Optional. Specifies the Subject of the email. Default value is "Auswertung".
+- **TenantPrimaryDomain**: Necessary to use if the provider mode for v14 is enabled. It specifies the desired tenant for the runtime environment.
 
 ## Example
 
