@@ -8,6 +8,14 @@ if ($PSVersionTable.PSVersion -gt $minver)
 {
 	$nspVersion = (Get-ItemProperty -Path HKLM:\SOFTWARE\NoSpamProxy\Components -ErrorAction SilentlyContinue).'Intranet Role'
 	if ($nspVersion -gt '14.0') {
+		try {
+			Connect-Nsp -IgnoreServerCertificateErrors -ErrorAction Stop
+		} catch {
+			$e = $_
+			Write-Warning "Not possible to connect with the NoSpamProxy. Please check the error message below."
+			$e |Format-List * -Force
+			EXIT
+		}
 		if ($(Get-NspIsProviderModeEnabled) -eq $true) {
 			if ($null -eq $TenantPrimaryDomain -OR $TenantPrimaryDomain -eq "") {
 				Write-Host "Please provide a TenantPrimaryDomain to run this script with NoSpamProxy v14 in provider mode."
@@ -17,8 +25,6 @@ if ($PSVersionTable.PSVersion -gt $minver)
 				# -IgnoreServerCertificateErrors allows the usage of self-signed certificates
 				Connect-Nsp -IgnoreServerCertificateErrors -PrimaryDomain $TenantPrimaryDomain
 			}
-		} else {
-			Connect-Nsp -IgnoreServerCertificateErrors
 		}
 	}
 $features = Get-nspfeatureusage;
