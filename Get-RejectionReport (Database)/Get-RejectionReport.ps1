@@ -374,7 +374,7 @@ $global:htmlout = "<html>
 
 $htmlout | Out-File $reportFileName
 "Sending report to $ReportRecipient"
-#Send-MailMessage -SmtpServer $SmtpHost -From $ReportSender -To $ReportRecipient -Subject $ReportSubject -Body "Im Anhang dieser E-Mail finden Sie den Bericht mit der Auswertung der abgewiesenen E-Mails." -Attachments $reportFileName
+Send-MailMessage -SmtpServer $SmtpHost -From $ReportSender -To $ReportRecipient -Subject $ReportSubject -Body "Im Anhang dieser E-Mail finden Sie den Bericht mit der Auswertung der abgewiesenen E-Mails." -Attachments $reportFileName
 Write-Host "Doing some cleanup.."
-#Remove-Item $reportFileName
+Remove-Item $reportFileName
 Write-Host "Done."
