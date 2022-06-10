@@ -45,6 +45,28 @@ param (
 	[Parameter(Mandatory=$false)][string] $TenantPrimaryDomain
 )
 
+$nspVersion = (Get-ItemProperty -Path HKLM:\SOFTWARE\NoSpamProxy\Components -ErrorAction SilentlyContinue).'Intranet Role'
+if ($nspVersion -gt '14.0') {
+	try {
+		Connect-Nsp -IgnoreServerCertificateErrors -ErrorAction Stop
+	} catch {
+		$e = $_
+		Write-Warning "Not possible to connect with the NoSpamProxy. Please check the error message below."
+		$e |Format-List * -Force
+		EXIT
+	}
+	if ($(Get-NspIsProviderModeEnabled) -eq $true) {
+		if ($null -eq $TenantPrimaryDomain -OR $TenantPrimaryDomain -eq "") {
+			Write-Host "Please provide a TenantPrimaryDomain to run this script with NoSpamProxy v14 in provider mode."
+			EXIT
+		} else {
+			# NSP v14 has a new authentication mechanism, Connect-Nsp is required to authenticate properly
+			# -IgnoreServerCertificateErrors allows the usage of self-signed certificates
+			Connect-Nsp -IgnoreServerCertificateErrors -PrimaryDomain $TenantPrimaryDomain
+		}
+	}
+}
+
 $outboundencrypted = 0
 $outboundnonencrypted = 0
 $inboundencrypted = 0
