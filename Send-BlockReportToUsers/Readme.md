@@ -11,19 +11,22 @@ The output contains the following information:
 
 ## Usage 
 ```ps
-Send-BlockReportToUsers.ps1 -FromDate <String> [-ToDate <String>] [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers\Send-BlockReportToUsers.ps1 -FromDate <String> [-ToDate <String>] [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -NoTime [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers\Send-BlockReportToUsers.ps1 -NoTime [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -NumberOfDaysToReport <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers\Send-BlockReportToUsers.ps1 -NumberOfDaysToReport <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -NumberOfHoursToReport <Int32> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers\Send-BlockReportToUsers.ps1 -NumberOfHoursToReport <Int32> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 ```ps
-Send-BlockReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [<CommonParameters>]
+Send-BlockReportToUsers\Send-BlockReportToUsers.ps1 -ReportInterval <String> [-ReportSender <String>] [-ReportSubject <String>] [-ReportFileName <String>] [-SmtpHost <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-CheckUserExistence] [-AdServer <String>] [-AdPort <Int32>] [-AdBaseDN <String>] [-AdReportGroup <String>] [-AdUsername <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
+```
+```ps
+Send-BlockReportToUsers\Send-BlockReportToUsers.ps1 -SetAdPassword [-ReportFileName <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
 ```
 
 ## Parameters
@@ -113,6 +116,10 @@ Sets the report E-Mail subject.
 ### SmtpHost
 Specifies the SMTP host which should be used to send the report E-Mail.  
 It is possible to use a FQDN or IP address.
+
+### TenantPrimaryDomain
+Used to login into the desired NoSpamProxy tenant to run this script on.  
+Only required if NoSpamProxy v14 is used in provider mode.
 	  
 ### ToDate
 Optional if you like to use a timespan.  
