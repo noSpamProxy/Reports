@@ -167,11 +167,19 @@ function processMessageTracks($tmpMessageTracks, $messageDirection){
 	$returnValues.sendersWithoutTLS = @()
 	foreach($messageTrack in $tmpMessageTracks){
 		if($messageDirection -eq "FromExternal"){
-			$tls = ($messageTrack.SenderConnectionSecurity)
+			if ($useV14Queries) {
+				$tls = ($messageTrack.TlsProtocol)
+			} else {
+				$tls = ($messageTrack.SenderConnectionSecurity)
+			}
 		}else{
-			$tls = ($messageTrack.DeliveryAttempts | Where-Object {$_.Status -eq "Success"}).ConnectionSecurity
+			if ($useV14Queries) {
+				$tls = ($messageTrack.DeliveryAttempts | Where-Object {$_.Status -eq "Success"}).TlsProtocol
+			} else {
+				$tls = ($messageTrack.DeliveryAttempts | Where-Object {$_.Status -eq "Success"}).ConnectionSecurity
+			}
 		}
-		if($null -eq $tls){
+		if($null -eq $tls -OR $tls -eq "None"){
 			# number of the successfull send/received messages without 
 			$returnValues.numberOfMessagesWithoutTls = $returnValues.numberOfMessagesWithoutTls+1
 			if($messageDirection -eq "FromExternal"){
@@ -338,6 +346,10 @@ if ($nspVersion -gt '14.0') {
 			Connect-Nsp -IgnoreServerCertificateErrors -PrimaryDomain $TenantPrimaryDomain
 		}
 	}
+}
+if ($nspVersion -ge '14.0.231') {
+	Write-Host "v14.1"
+	$useV14Queries = $true
 }
 # check NSP version for compatibility 
 if(!((Get-NspIntranetRole).Version -ge [version]"13.0.19147.917")){
