@@ -381,7 +381,6 @@ if ($nspVersion -gt '14.0') {
 	}
 }
 if ($nspVersion -ge '14.0.231') {
-	Write-Host "v14.1"
 	$useV14Queries = $true
 }
 # check NSP version for compatibility 
