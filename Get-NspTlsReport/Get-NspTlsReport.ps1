@@ -276,7 +276,7 @@ function createHTML($resultFromExternal, $percentFromExternal, $resultFromLocal,
 		Davon waren unverschl&uuml;sselt: $($resultFromExternal.numberOfMessagesWithoutTls) ($percentFromExternal%)<br><br>
 		Davon waren Tls 1.0 verschl&uuml;sselt: $($resultFromExternal.numberOfTls10) ($percentFromExternalTls10%)<br>
 		Davon waren Tls 1.1 verschl&uuml;sselt: $($resultFromExternal.numberOfTls11) ($percentFromExternalTls11%)<br>
-		Davon waren Tls 1.2 verschl&uuml;sselt: $($resultFromExternal.numberOfTls12) ($percentFromExternalTls12%)<br><br>
+		Davon waren Tls 1.2 verschl&uuml;sselt: $($resultFromExternal.numberOfTls12) ($percentFromExternalTls12%)<br>
 		Davon waren Tls 1.3 verschl&uuml;sselt: $($resultFromExternal.numberOfTls13) ($percentFromExternalTls13%)<br><br>
 		Anzahl aller ausgehenden Verbindungen: $($resultFromLocal.numberOfMessages)<br>
 		Davon waren unverschl&uuml;sselt: $($resultFromLocal.numberOfMessagesWithoutTls) ($percentFromLocal%)<br><br>
