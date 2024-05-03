@@ -82,10 +82,10 @@
   Report is stored under %TEMP%\TLSReport.html unless a custom <ReportFileName> parameter is given.
 
 .NOTES
-  Version:        1.0.5
+  Version:        1.1.0
   Author:         Jan Jaeschke
   Creation Date:  2022-06-07
-  Purpose/Change: added v14 support
+  Purpose/Change: added TLS version details
   
 .LINK
   https://www.nospamproxy.de
@@ -193,6 +193,27 @@ function processMessageTracks($tmpMessageTracks, $messageDirection){
 			}else{
 				$returnValues.sendersWithoutTLS += "$sender <br>"
 			}
+					} else{
+			if($messageDirection -eq "FromExternal"){
+				switch($tls){
+					"Tls"{
+						$returnValues.numberOfTls10 = $returnValues.numberOfTls10+1
+						break;
+					}
+					"Tls11"{
+						$returnValues.numberOfTls11 = $returnValues.numberOfTls11+1
+						break;
+					}
+					"Tls12"{
+						$returnValues.numberOfTls12 = $returnValues.numberOfTls12+1
+						break;
+					}
+					"Tls13"{
+						$returnValues.numberOfTls13 = $returnValues.numberOfTls13+1
+						break;
+					}
+				}
+			}
 		}
 	}
 	$returnValues.sendersWithoutTLS = $returnValues.sendersWithoutTLS | Get-Unique
@@ -218,6 +239,10 @@ function getData($messageDirection){
 		$processResult = processMessageTracks $messageTracks $messageDirection
 		$returnValues.numberOfMessagesWithoutTls += $processResult.numberOfMessagesWithoutTls
 		$returnValues.sendersWithoutTLS += $processResult.sendersWithoutTLS
+		$returnValues.numberOfTls10 += $processResult.numberOfTls10
+		$returnValues.numberOfTls11 += $processResult.numberOfTls11
+		$returnValues.numberOfTls12 += $processResult.numberOfTls12
+		$returnValues.numberOfTls12 += $processResult.numberOfTls13
 		# exit condition
 		if($messageTracks){
 			$skipMessageTracks = $skipMessageTracks+100
@@ -231,6 +256,10 @@ function getData($messageDirection){
 }
 # generate HMTL report
 function createHTML($resultFromExternal, $percentFromExternal, $resultFromLocal, $percentFromLocal) {
+	$percentFromExternalTls10 = [Math]::Round($($resultFromExternal.numberOfTls10)/$($resultFromExternal.numberOfMessages)*100,2)
+	$percentFromExternalTls11 = [Math]::Round($($resultFromExternal.numberOfTls11)/$($resultFromExternal.numberOfMessages)*100,2)
+	$percentFromExternalTls12 = [Math]::Round($($resultFromExternal.numberOfTls12)/$($resultFromExternal.numberOfMessages)*100,2)
+	$percentFromExternalTls13 = [Math]::Round($($resultFromExternal.numberOfTls13)/$($resultFromExternal.numberOfMessages)*100,2)
 	$htmlOut =
 "<html>
 	<head>
@@ -245,6 +274,10 @@ function createHTML($resultFromExternal, $percentFromExternal, $resultFromLocal,
 		<br>
 		Anzahl aller eingehenden Verbindungen: $($resultFromExternal.numberOfMessages)<br>
 		Davon waren unverschl&uuml;sselt: $($resultFromExternal.numberOfMessagesWithoutTls) ($percentFromExternal%)<br><br>
+		Davon waren Tls 1.0 verschl&uuml;sselt: $($resultFromExternal.numberOfTls10) ($percentFromExternalTls10%)<br>
+		Davon waren Tls 1.1 verschl&uuml;sselt: $($resultFromExternal.numberOfTls11) ($percentFromExternalTls11%)<br>
+		Davon waren Tls 1.2 verschl&uuml;sselt: $($resultFromExternal.numberOfTls12) ($percentFromExternalTls12%)<br>
+		Davon waren Tls 1.3 verschl&uuml;sselt: $($resultFromExternal.numberOfTls13) ($percentFromExternalTls13%)<br><br>
 		Anzahl aller ausgehenden Verbindungen: $($resultFromLocal.numberOfMessages)<br>
 		Davon waren unverschl&uuml;sselt: $($resultFromLocal.numberOfMessagesWithoutTls) ($percentFromLocal%)<br><br>
 		Adressen, die unverschl&uuml;sselt geschickt haben: <br>
@@ -348,7 +381,6 @@ if ($nspVersion -gt '14.0') {
 	}
 }
 if ($nspVersion -ge '14.0.231') {
-	Write-Host "v14.1"
 	$useV14Queries = $true
 }
 # check NSP version for compatibility 
