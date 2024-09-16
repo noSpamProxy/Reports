@@ -12,11 +12,14 @@ select
 		when Status = 1 then 'Success' 
 		when Status = 3 then 'Temporary Blocked'
 		when Status = 4 then 'Permanently Blocked'
+		when Status = 5 then 'Delivery Pending'
 		when Status = 6 then 'PartialSuccess'
+		when Status = 7 then  'Suppressed'
+		when Status = 8 then 'DuplicateDrop'
 		when Status = 9 then 'Put on Hold'
 		when Status is null then 'Summary'
 	end Status,
 	COUNT(*)  Count
 from MessageTracking.MessageTrackEntry 
-where Sent > @startdate and Sent < @enddate and status IN (1,3,4,6,9) AND TenantId = @tenantId
+where Sent > @startdate and Sent < @enddate and status IN (1,3,4,5,6,7,8,9) AND TenantId = @tenantId
 group by rollup (WasReceivedFromRelayServer, status)
