@@ -16,22 +16,34 @@ Exports filtered message tracks to a CSV containing the following information:
 ## Usage 
 
 ```ps
-Get-NspMsgTrackAsCSV\Get-NspMsgTrackAsCSV.ps1 -FromDate <String> [-ToDate <String>] [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -FromDate <String> [-ToDate <String>] [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [-TransactionId <String>] [-IpAddress <String>] [-MailSubject <String>] [-MessageId <String>] [-MinScl <Int32>] [-MaxScl <Int32>] [-Direction <String>] [-EmailAddress1 <String>] [-EmailAddress2 <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV\Get-NspMsgTrackAsCSV.ps1 -NumberOfDaysToReport <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -NumberOfDaysToReport <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [-TransactionId <String>] [-IpAddress <String>] [-MailSubject <String>] [-MessageId <String>] [-MinScl <Int32>] [-MaxScl <Int32>] [-Direction <String>] [-EmailAddress1 <String>] [-EmailAddress2 <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV\Get-NspMsgTrackAsCSV.ps1 -NumberOfHoursToReport <Int32> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -NumberOfHoursToReport <Int32> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [-TransactionId <String>] [-IpAddress <String>] [-MailSubject <String>] [-MessageId <String>] [-MinScl <Int32>] [-MaxScl <Int32>] [-Direction <String>] [-EmailAddress1 <String>] [-EmailAddress2 <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV\Get-NspMsgTrackAsCSV.ps1 -ReportInterval <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -ReportInterval <String> [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [-TransactionId <String>] [-IpAddress <String>] [-MailSubject <String>] [-MessageId <String>] [-MinScl <Int32>] [-MaxScl <Int32>] [-Direction <String>] [-EmailAddress1 <String>] [-EmailAddress2 <String>] [<CommonParameters>]
 ```
 ```ps
-Get-NspMsgTrackAsCSV\Get-NspMsgTrackAsCSV.ps1 -NoTime [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [<CommonParameters>]
+Get-NspMsgTrackAsCSV.ps1 -NoTime [-Status <String>] [-NspRule <String>] [-MailRecipientCSV <String>] [-NoMail] [-ReportFileName <String>] [-ReportRecipient <String[]>] [-ReportRecipientCSV <String>] [-ReportSender <String>] [-ReportSubject <String>] [-SmtpHost <String>] [-TenantPrimaryDomain <String>] [-TransactionId <String>] [-IpAddress <String>] [-MailSubject <String>] [-MessageId <String>] [-MinScl <Int32>] [-MaxScl <Int32>] [-Direction <String>] [-EmailAddress1 <String>] [-EmailAddress2 <String>] [<CommonParameters>]
 ```
 
 ## Parameters
+### Direction
+  Default: All
+  Filter for the direction of an email. (Inbound/Outbound)
+  Possible values:
+  All | FromExternal | FromLocal | None
+
+### EmailAddress1
+  The email address / part of the address of one of the communication participants.
+
+### EmailAddress2
+  The email address / part of the address of one of the communication participants.
+
 ### FromDate
   Mandatory if you like to use a timespan.  
   Specifies the start date for the E-Mail filter.  
@@ -42,6 +54,21 @@ Get-NspMsgTrackAsCSV\Get-NspMsgTrackAsCSV.ps1 -NoTime [-Status <String>] [-NspRu
 ### NoMail
 Does not generate an E-Mail and saves the generated reports to the current execution location.  
 Ideal for testing or manual script usage.  
+
+### IpAddress
+  Filter for an IP address.
+
+### MailSubject
+  Filter for the subject / part of a subject of an email.
+
+### MaxScl
+  Filter for messages which have a maximal SCL value.
+
+### MessageId
+  Fitler for the message id of an email.
+
+### MinScl
+  Filter for messages which have a minimal SCL value.
 
 ### NoTime
   Mandatory if you do not like to specify a time value in any kind of way.  
@@ -110,6 +137,9 @@ Please use ISO 8601 date format: "YYYY-MM-DD hh:mm:ss"
 E.g.:  
   "2019-06-05 08:00" or "2019-06-05 20:00:00"
 	
+### TransactionId
+  Filter for the transaction ID which is provided by a NoSpamProxy Messagetrack.
+
 ## Outputs
 Report is stored under %TEMP% if the report is send via E-Mail the file will be removed.
 
