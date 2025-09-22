@@ -12,7 +12,7 @@ It is also possible to generate a domain based license report, please the altern
 ## Usage 
 
 ```ps
-Get-NspLicenseReport -ExportFilePath
+Get-NspLicenseReport -ExportFilePath "PATH_TO_EXPORT_FILE"
 ```
 
 - **ExportFilePath**: Mandatory. Specifies the path where the report will be saved.
@@ -20,7 +20,7 @@ Get-NspLicenseReport -ExportFilePath
 ## Example
 
 ```ps
-.\Get-NspLicenseReport.ps1 -ExportFilePath Usage.txt
+.\Get-NspLicenseReport.ps1 -ExportFilePath "C:\example\Usage.txt"
 ```
 
 ## Supported NoSpamProxy Versions
