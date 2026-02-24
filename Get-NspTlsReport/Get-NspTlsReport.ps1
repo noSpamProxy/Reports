@@ -242,7 +242,7 @@ function getData($messageDirection){
 		$returnValues.numberOfTls10 += $processResult.numberOfTls10
 		$returnValues.numberOfTls11 += $processResult.numberOfTls11
 		$returnValues.numberOfTls12 += $processResult.numberOfTls12
-		$returnValues.numberOfTls12 += $processResult.numberOfTls13
+		$returnValues.numberOfTls13 += $processResult.numberOfTls13
 		# exit condition
 		if($messageTracks){
 			$skipMessageTracks = $skipMessageTracks+100
