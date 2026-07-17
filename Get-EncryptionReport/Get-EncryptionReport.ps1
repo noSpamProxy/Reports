@@ -38,17 +38,81 @@
 #>
 
 param (
-  [Parameter(Mandatory=$true)][string] $smtphost,
-  [Parameter(Mandatory=$true)][string] $ReportSender,
-  [Parameter(Mandatory=$true)][string] $ReportRecipient,
+  [Parameter(Mandatory=$true, ParameterSetName="default")][string] $smtphost,
+  [Parameter(Mandatory=$true, ParameterSetName="default")][string] $ReportSender,
+  [Parameter(Mandatory=$true, ParameterSetName="default")][string] $ReportRecipient,
   # only needed for v14 with enabled provider mode
-	[Parameter(Mandatory=$false)][string] $TenantPrimaryDomain
+	[Parameter(Mandatory=$false)][string] $TenantPrimaryDomain,
+  # Optional credential. When supplied, BASIC authentication is used. Omit it to use integrated (NTLM) auth, or force NTLM with -UseIntegratedAuth.
+  [Parameter(Mandatory=$false)][PSCredential] $Credential,
+  [Parameter(Mandatory=$false)][string] $CredentialFileLocation = "$PSScriptRoot\NspBasicAuthCredential.bin",
+  [Parameter(Mandatory=$true, ParameterSetName="setCredentialSet")][switch] $SetCredential,
+  [Parameter(Mandatory=$false)][switch] $UseIntegratedAuth
 )
+
+if (-not [System.IO.Path]::IsPathRooted($CredentialFileLocation)) {
+  $CredentialFileLocation = Join-Path -Path $PSScriptRoot -ChildPath $CredentialFileLocation
+}
+
+# create an encrypted local credential file using DPAPI LocalMachine
+function Set-loginPass {
+  Add-Type -AssemblyName System.Security
+  $username = Read-Host -Prompt 'Input your username'
+  $securePass = Read-Host -Prompt 'Input your user password' -AsSecureString
+  $plainPass = [System.Net.NetworkCredential]::new('', $securePass).Password
+  $inBytes = [System.Text.Encoding]::Unicode.GetBytes($plainPass)
+  $protected = [System.Security.Cryptography.ProtectedData]::Protect($inBytes, $null, [System.Security.Cryptography.DataProtectionScope]::LocalMachine)
+  $payload = @{ FormatVersion = 1; Username = $username; Password = [System.Convert]::ToBase64String($protected) } | ConvertTo-Json -Compress
+  [System.IO.File]::WriteAllText($CredentialFileLocation, $payload, [System.Text.Encoding]::UTF8)
+}
+
+# read credential file and return a PSCredential object if possible
+function Get-loginPass {
+  Add-Type -AssemblyName System.Security
+  if (-not (Test-Path $CredentialFileLocation)) {
+    return $null
+  }
+
+  try {
+    $content = [System.IO.File]::ReadAllText($CredentialFileLocation, [System.Text.Encoding]::UTF8)
+    $payload = $content | ConvertFrom-Json
+    if ([string]::IsNullOrWhiteSpace($payload.Username) -or [string]::IsNullOrWhiteSpace($payload.Password)) {
+      Write-Warning "Credential file '$CredentialFileLocation' does not use the expected username/password JSON format. Recreate it with -SetCredential. Falling back to integrated authentication."
+      return $null
+    }
+
+    $protected = [System.Convert]::FromBase64String($payload.Password)
+    $rawKey = [System.Security.Cryptography.ProtectedData]::Unprotect($protected, $null, [System.Security.Cryptography.DataProtectionScope]::LocalMachine)
+    $plainPass = [System.Text.Encoding]::Unicode.GetString($rawKey)
+    $securePassword = ConvertTo-SecureString -String $plainPass -AsPlainText -Force
+    return New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $payload.Username, $securePassword
+  }
+  catch {
+    Write-Warning "Credential file '$CredentialFileLocation' cannot be loaded: $($_.Exception.Message) Recreate it with -SetCredential if it was created on another machine or with an older password-only format. Falling back to integrated authentication."
+    return $null
+  }
+}
+
+if($SetCredential){
+  Set-loginPass
+  EXIT
+}
+
+$resolvedCredential = $null
+if (-not $UseIntegratedAuth) {
+  if ($Credential) {
+    $resolvedCredential = $Credential
+  }
+  else {
+    $resolvedCredential = Get-loginPass
+  }
+}
 
 $nspVersion = (Get-ItemProperty -Path HKLM:\SOFTWARE\NoSpamProxy\Components -ErrorAction SilentlyContinue).'Intranet Role'
 if ($nspVersion -gt '14.0') {
 	try {
-		Connect-Nsp -IgnoreServerCertificateErrors -ErrorAction Stop
+		$connectParams = @{ IgnoreServerCertificateErrors = $true; ErrorAction = 'Stop' }; if ($resolvedCredential) { $connectParams['Credential'] = $resolvedCredential.GetNetworkCredential() }
+		Connect-Nsp @connectParams
 	} catch {
 		$e = $_
 		Write-Warning "Not possible to connect with the NoSpamProxy. Please check the error message below."
@@ -62,7 +126,8 @@ if ($nspVersion -gt '14.0') {
 		} else {
 			# NSP v14 has a new authentication mechanism, Connect-Nsp is required to authenticate properly
 			# -IgnoreServerCertificateErrors allows the usage of self-signed certificates
-			Connect-Nsp -IgnoreServerCertificateErrors -PrimaryDomain $TenantPrimaryDomain
+      $connectParams = @{ IgnoreServerCertificateErrors = $true; PrimaryDomain = $TenantPrimaryDomain }; if ($resolvedCredential) { $connectParams['Credential'] = $resolvedCredential.GetNetworkCredential() }
+			Connect-Nsp @connectParams
 		}
 	}
 }

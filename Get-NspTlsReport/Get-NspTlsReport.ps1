@@ -157,10 +157,42 @@ param (
 	# set used SMTP host for sending report E-Mail only a valid  IP address or FQDN is allowed
 	[Parameter(Mandatory=$false)][ValidatePattern("^(((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))|(((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}))$")][string] $SmtpHost,
 	# only needed for v14 with enabled provider mode
-	[Parameter(Mandatory=$false)][string] $TenantPrimaryDomain	
+	[Parameter(Mandatory=$false)][string] $TenantPrimaryDomain,
+	# Optional credential. When supplied, BASIC authentication is used. Omit it to use integrated (NTLM) auth, or force NTLM with -UseIntegratedAuth.
+	[Parameter(Mandatory=$false)][PSCredential] $Credential,
+	[Parameter(Mandatory=$false)][string] $CredentialFileLocation = "$PSScriptRoot\NspBasicAuthCredential.bin",
+	[Parameter(Mandatory=$true, ParameterSetName="setCredentialSet")][switch] $SetCredential,
+	[Parameter(Mandatory=$false)][switch] $UseIntegratedAuth	
 )
 
+if (-not [System.IO.Path]::IsPathRooted($CredentialFileLocation)) {
+	$CredentialFileLocation = Join-Path -Path $PSScriptRoot -ChildPath $CredentialFileLocation
+}
+
 #-------------------Functions----------------------
+function Set-loginPass {
+	Add-Type -AssemblyName System.Security
+	$username = Read-Host -Prompt 'Input your username'
+	$securePass = Read-Host -Prompt 'Input your user password' -AsSecureString
+	$plainPass = [System.Net.NetworkCredential]::new('', $securePass).Password
+	$protected = [System.Security.Cryptography.ProtectedData]::Protect([System.Text.Encoding]::Unicode.GetBytes($plainPass), $null, [System.Security.Cryptography.DataProtectionScope]::LocalMachine)
+	$payload = @{ FormatVersion = 1; Username = $username; Password = [System.Convert]::ToBase64String($protected) } | ConvertTo-Json -Compress
+	[System.IO.File]::WriteAllText($CredentialFileLocation, $payload, [System.Text.Encoding]::UTF8)
+}
+
+function Get-loginPass {
+	Add-Type -AssemblyName System.Security
+	if (-not (Test-Path $CredentialFileLocation)) { return $null }
+	try {
+		$payload = [System.IO.File]::ReadAllText($CredentialFileLocation, [System.Text.Encoding]::UTF8) | ConvertFrom-Json
+		if ([string]::IsNullOrWhiteSpace($payload.Username) -or [string]::IsNullOrWhiteSpace($payload.Password)) { Write-Warning "Credential file '$CredentialFileLocation' does not use the expected username/password JSON format. Recreate it with -SetCredential. Falling back to integrated authentication."; return $null }
+		$rawKey = [System.Security.Cryptography.ProtectedData]::Unprotect([System.Convert]::FromBase64String($payload.Password), $null, [System.Security.Cryptography.DataProtectionScope]::LocalMachine)
+		$securePassword = ConvertTo-SecureString -String ([System.Text.Encoding]::Unicode.GetString($rawKey)) -AsPlainText -Force
+		return New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $payload.Username, $securePassword
+	}
+	catch { Write-Warning "Credential file '$CredentialFileLocation' cannot be loaded: $($_.Exception.Message) Recreate it with -SetCredential if it was created on another machine or with an older password-only format. Falling back to integrated authentication."; return $null }
+}
+
 # process actual MessageTracks - compare Mail From and add htmlContent
 function processMessageTracks($tmpMessageTracks, $messageDirection){
 	$returnValues = @{}
@@ -359,10 +391,18 @@ $getMessageTracks = $true
 
 
 #--------------------Main-----------------------
+if($SetCredential){ Set-loginPass; EXIT }
+$resolvedCredential = $null
+if (-not $UseIntegratedAuth) {
+	if ($Credential) { $resolvedCredential = $Credential }
+	else { $resolvedCredential = Get-loginPass }
+}
+
 $nspVersion = (Get-ItemProperty -Path HKLM:\SOFTWARE\NoSpamProxy\Components -ErrorAction SilentlyContinue).'Intranet Role'
 if ($nspVersion -gt '14.0') {
 	try {
-		Connect-Nsp -IgnoreServerCertificateErrors -ErrorAction Stop
+		$connectParams = @{ IgnoreServerCertificateErrors = $true; ErrorAction = 'Stop' }; if ($resolvedCredential) { $connectParams['Credential'] = $resolvedCredential.GetNetworkCredential() }
+		Connect-Nsp @connectParams
 	} catch {
 		$e = $_
 		Write-Warning "Not possible to connect with the NoSpamProxy. Please check the error message below."
@@ -376,7 +416,8 @@ if ($nspVersion -gt '14.0') {
 		} else {
 			# NSP v14 has a new authentication mechanism, Connect-Nsp is required to authenticate properly
 			# -IgnoreServerCertificateErrors allows the usage of self-signed certificates
-			Connect-Nsp -IgnoreServerCertificateErrors -PrimaryDomain $TenantPrimaryDomain
+			$connectParams = @{ IgnoreServerCertificateErrors = $true; PrimaryDomain = $TenantPrimaryDomain }; if ($resolvedCredential) { $connectParams['Credential'] = $resolvedCredential.GetNetworkCredential() }
+			Connect-Nsp @connectParams
 		}
 	}
 }
