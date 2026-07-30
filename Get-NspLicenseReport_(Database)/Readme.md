@@ -10,6 +10,44 @@ It is possible to generate a user-based report which contains the following info
 Moreover it is possible to generate a domain-based report which contains the same information like above but separated for each domain. 
 Be aware of the fact that a user with mulitple domains will be counted multiple times in the domain based report.
 
+## MSP Wrapper Authentication
+
+`Get-NspLicenseReportForMsp.ps1` is the provider-mode wrapper. It supports BASIC or integrated Windows (**NTLM**) authentication for its NoSpamProxy connection.
+
+Authentication priority is:
+
+1. `UseIntegratedAuth` forces NTLM.
+2. An explicit `Credential` uses BASIC authentication.
+3. A valid saved credential file uses BASIC authentication.
+4. Without a credential source, the wrapper uses NTLM.
+
+### Credential
+Optional `PSCredential` for NoSpamProxy BASIC authentication. It takes precedence over a saved credential file.
+
+### CredentialFileLocation
+Optional path to the saved NoSpamProxy BASIC credential file. The default is `NspBasicAuthCredential.bin` beside the wrapper. Relative paths such as `./auth.bin` are resolved beside the wrapper, not from the current PowerShell directory.
+
+### SetCredential
+Creates or replaces the saved NoSpamProxy credential file and exits. It prompts for the NoSpamProxy username and password; no report parameters are required.
+
+### UseIntegratedAuth
+Forces integrated Windows (NTLM) authentication and ignores `Credential` and `CredentialFileLocation`.
+
+The saved file contains the username and a password encrypted with Windows DPAPI `LocalMachine`. It can be read by users on the same computer who have permission to read the file, so protect it with suitable filesystem ACLs. Recreate it after moving to another computer.
+
+Create the default credential file:
+```ps
+.\Get-NspLicenseReportForMsp.ps1 -SetCredential
+```
+
+Create and use a custom credential file:
+```ps
+.\Get-NspLicenseReportForMsp.ps1 -SetCredential -CredentialFileLocation .\auth.bin
+.\Get-NspLicenseReportForMsp.ps1 -NoMail -CredentialFileLocation .\auth.bin
+```
+
+These parameters authenticate the NoSpamProxy connection only. `SqlCredential`, `SqlUsername`, and `SqlPasswordFileLocation` continue to control database authentication.
+
 ## Usage 
 
 ```ps
